@@ -3,7 +3,7 @@
 
 #define UIScreenWidth 128
 #define UIScreenHeight 64
-#define SerialRate 9600
+#define BAUD 9600
 #define DEBOUNCE 300
 
 #define POWERBUTTON 0
@@ -30,7 +30,7 @@ void wakeDisplay(Adafruit_SSD1306* display) {
   display->ssd1306_command(SSD1306_DISPLAYON);
 }
 
-byte displayOn = 0;
+byte displayOn = 1;
 
 void togglePower() {
   if (displayOn) {
@@ -42,7 +42,7 @@ void togglePower() {
 }
 
 void setup() {
-  Serial.begin(SerialRate);
+  Serial.begin(BAUD);
   initializeDisplay();
   initializePeripherals();
   lcd.println("Welcome to \n dumbOS");
@@ -58,4 +58,5 @@ void loop() {
     togglePower();
     lastButtonPress = millis();
   }
+  prev_state = curr_state;
 }
