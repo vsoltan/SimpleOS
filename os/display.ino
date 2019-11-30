@@ -1,22 +1,26 @@
 
-Adafruit_SSD1306 * initializeDisplay() {
-    Adafruit_SSD1306 lcd(UIScreenWidth, UIScreenHeight);
-    lcd.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    lcd.setTextColor(WHITE);
-    lcd.setTextSize(2);
-    lcd.setCursor(0,0);
-    lcd.clearDisplay();
-    lcd.println(staticTime);
-    lcd.display();
-    return &lcd;
+char *statictime = "12:54";
+
+void initializeDisplay(Adafruit_SSD1306 *lcd) {
+    lcd->begin(SSD1306_SWITCHCAPVCC, 0x3C);
+    lcd->setTextColor(WHITE);
+    lcd->setTextSize(TextSize);
+    lcd->clearDisplay();
+    lcd->setCursor(centerWidth, centerHeight);
+    lcd->println(staticTime);
+    lcd->display();
 }
 
-display * createDisplay() {
-    display watchDisplay = {
-        .displayOn = 1,
-        .lcd = initializeDisplay(),
-    };
-    return &watchDisplay;
+DisplayStatus * createDisplayStatus() {
+    DisplayStatus *watchDisplay = NULL;
+    watchDisplay = (DisplayStatus *) malloc(sizeof(DisplayStatus));
+
+    if (watchDisplay == NULL) {
+      exit(EXIT_FAILURE);
+    }
+
+    watchDisplay->displayOn = 1;
+    return watchDisplay;
 }
 
 void wakeDisplay(Adafruit_SSD1306* display) {
@@ -27,11 +31,12 @@ void sleepDisplay(Adafruit_SSD1306* display) {
     display->ssd1306_command(SSD1306_DISPLAYOFF);
 }
 
-void togglePower(display *watchDisplay) {
+void togglePower(DisplayStatus *watchDisplay, Adafruit_SSD1306 *lcd) {
+  Serial.println(watchDisplay->displayOn);
   if (watchDisplay->displayOn) {
-    sleepDisplay(watchDisplay->lcd);
-   } else {
-    wakeDisplay(watchDisplay->lcd);
-   }
-   watchDisplay->displayOn = !watchDisplay->displayOn;
+      sleepDisplay(lcd);
+  } else {
+      wakeDisplay(lcd);
+  }
+  watchDisplay->displayOn = !watchDisplay->displayOn;
 }

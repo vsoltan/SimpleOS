@@ -2,19 +2,28 @@
 
 #define UIScreenWidth 128
 #define UIScreenHeight 64
+#define TextSize 2
+
+// textSize 1, character takes up 6 (width) by 8 (height) pixel matrix
+#define widthScale 6
+#define heightScale 8
+
 #define staticTime "12:45"
 
+#define centerWidth  (UIScreenWidth - widthScale * TextSize * strlen(staticTime))/2
+#define centerHeight (UIScreenHeight - heightScale * TextSize)/2 
+
 typedef struct {
-    byte displayOn;
-    Adafruit_SSD1306 *lcd;
-} display;
+    // other data regarding current display state
+    volatile byte displayOn;
+} DisplayStatus;
 
-Adafruit_SSD1306 * initializeDisplay();
+void initializeDisplay(Adafruit_SSD1306 *lcd);
 
-display * createDisplay();
+DisplayStatus * createDisplayStatus();
 
 void sleepDisplay(Adafruit_SSD1306 *display);
 
 void wakeDisplay(Adafruit_SSD1306 *display);
 
-void togglePower(display *displayStatus, Adafruit_SSD1306 *lcd);
+void togglePower(DisplayStatus *watchDisplay, Adafruit_SSD1306 *lcd);
