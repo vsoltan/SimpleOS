@@ -1,4 +1,3 @@
-
 #include "bluetooth.h"
 
 BLEServer *watchServer = NULL;
