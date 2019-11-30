@@ -14,23 +14,24 @@ void setup() {
     // initializePeripherals();
 }
 
-// unsigned long lastclick_time = 0;
-
 /*
  * TODO: tried to convert to an interrupt but it didn't work
+ 
+ unsigned long lastclick_time = 0; 
+
+ void IRAM_ATTR power() {
+     if (millis() > lastclick_time + DEBOUNCE) {
+         Serial.println("pressed");
+         togglePower(displayStatus, &lcd);
+         lastclick_time = millis();
+     }
+ }
+
+ void initializePeripherals() {
+     pinMode(POWERBUTTON, INPUT_PULLUP);
+     attachInterrupt(POWERBUTTON, power, FALLING);
+ }
  */
-// void IRAM_ATTR power() {
-//     if (millis() > lastclick_time + DEBOUNCE) {
-//         Serial.println("pressed");
-//         togglePower(displayStatus, &lcd);
-//         lastclick_time = millis();
-//     }
-// }
-//
-// void initializePeripherals() {
-//     pinMode(POWERBUTTON, INPUT_PULLUP);
-//     attachInterrupt(POWERBUTTON, power, FALLING);
-// }
 
 long lastButtonPress = 0;
 byte prev_state = 1;
