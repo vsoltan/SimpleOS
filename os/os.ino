@@ -15,7 +15,7 @@ void setup() {
     initializePeripherals();
 }
 
-unsigned long lastclick_time = 0; 
+unsigned long lastclick_time = 0;
 
 void IRAM_ATTR power() {
     if (millis() > lastclick_time + DEBOUNCE) {
@@ -35,9 +35,10 @@ void IRAM_ATTR power() {
 //byte prev_state = 1;
 
 void loop() {
-    u8g2.clearBuffer();         
-    u8g2.drawStr(0, centerHeight, "Hello World!");  
-    u8g2.sendBuffer();          
+    Serial.println(getStringWidth(&u8g2, staticTime));
+    u8g2.clearBuffer();
+    u8g2.drawStr((UIScreenWidth - widthScale * getStringWidth(&u8g2, staticTime))/2, centerHeight, "Hello World!");  
+    u8g2.sendBuffer();
 //    byte curr_state = digitalRead(POWERBUTTON);
 //    if (curr_state == 0 && prev_state == 1 && millis() >= lastButtonPress + DEBOUNCE) {
 //        togglePower(displayStatus, &u8g2);

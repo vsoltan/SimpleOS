@@ -11,8 +11,9 @@
 #define DEFAULT_FONT u8g2_font_ncenB08_tr
 
 #define heightScale 8
+#define widthScale 3
 
-#define centerHeight (UIScreenHeight - heightScale * TextSize)/2
+#define centerHeight (UIScreenHeight - heightScale)/2
 
 typedef struct {
     // other data regarding current display state
@@ -29,6 +30,6 @@ void wakeDisplay(OLED *display);
 
 void togglePower(DisplayStatus *watchDisplay, OLED *display);
 
-// text manipulation 
+// text manipulation
 
 uint8_t getStringWidth(OLED *display, const char *string);
