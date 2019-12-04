@@ -28,7 +28,7 @@ void sleepDisplay(OLED *display);
 
 void wakeDisplay(OLED *display);
 
-void togglePower(DisplayStatus *watchDisplay, OLED *display);
+void togglePower(byte displayOn, OLED *display);
 
 // text manipulation
 
