@@ -1,14 +1,8 @@
 
-char *statictime = "12:54";
-
-void initializeDisplay(Adafruit_SSD1306 *lcd) {
-    lcd->begin(SSD1306_SWITCHCAPVCC, 0x3C);
-    lcd->setTextColor(WHITE);
-    lcd->setTextSize(TextSize);
-    lcd->clearDisplay();
-    lcd->setCursor(centerWidth, centerHeight);
-    lcd->println(staticTime);
-    lcd->display();
+void initializeDisplay(OLED *display) {
+  display->begin();
+  display->setBusClock(BUS_CLOCK);
+  display->setFont(DEFAULT_FONT);
 }
 
 DisplayStatus * createDisplayStatus() {
@@ -23,20 +17,22 @@ DisplayStatus * createDisplayStatus() {
     return watchDisplay;
 }
 
-void wakeDisplay(Adafruit_SSD1306* display) {
-    display->ssd1306_command(SSD1306_DISPLAYON);
+void wakeDisplay(OLED *display) {
+  display->setPowerSave(0);
 }
 
-void sleepDisplay(Adafruit_SSD1306* display) {
-    display->ssd1306_command(SSD1306_DISPLAYOFF);
+void sleepDisplay(OLED *display) {
+  display->setPowerSave(1);
 }
 
-void togglePower(DisplayStatus *watchDisplay, Adafruit_SSD1306 *lcd) {
-  Serial.println(watchDisplay->displayOn);
-  if (watchDisplay->displayOn) {
-      sleepDisplay(lcd);
+void togglePower(bool displayOn, OLED *display) {
+  if (displayOn) {
+      sleepDisplay(display);
   } else {
-      wakeDisplay(lcd);
+      wakeDisplay(display);
   }
-  watchDisplay->displayOn = !watchDisplay->displayOn;
+}
+
+uint8_t getStringWidth(OLED *display, const char *string) {
+  return display->getUTF8Width(string);
 }
