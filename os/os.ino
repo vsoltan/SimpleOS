@@ -11,16 +11,21 @@ RotaryEncoder encoder(RO_A, RO_B);
 RTC_Millis rtc;
 DisplayInfo *oledInfo;
 
+char timeStamp[9];
+char date[30];
+
 // GLOBALS
 
 volatile byte displayOn = true;
 volatile unsigned long lastclick_time = 0;
+unsigned timeUpdateTick = 0;
 
 void setup() {
     Serial.begin(BAUD);
     initializeDisplay(&u8g2);
     oledInfo = createDisplayInfo();
     initializePeripherals();
+    initRTC(&rtc);
     drawHomeScreen(&u8g2);
 }
 
@@ -43,31 +48,28 @@ void initializePeripherals() {
 }
 
 void loop() {
+//  encoder.tick();
 
-  DateTime now = rtc.now();
-  
-  Serial.print(now.year(), DEC);
-  Serial.print('/');
-  Serial.print(now.month(), DEC);
-  Serial.print('/');
-  Serial.print(now.day(), DEC);
-  Serial.print(' ');
-  Serial.print(now.hour(), DEC);
-  Serial.print(':');
-  Serial.print(now.minute(), DEC);
-  Serial.print(':');
-  Serial.print(now.second(), DEC);
-  Serial.println();
-  
-  static int pos = 0;
-  encoder.tick();
+  getTime(&rtc, timeStamp);
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_ncenB08_tr); // choose a suitable font
+  u8g2.drawStr(0,10, timeStamp);  // write something to the internal memory
+  u8g2.sendBuffer();          // transfer internal memory to the display
+  timeStamp[0] = '\0'; 
+  date[0] = '\0';
+ 
+//  if ()
 
-  int newPos = encoder.getPosition();
-  if (pos != newPos) {
-    Serial.print(newPos);
-    Serial.println();
-    pos = newPos;
-  } 
+  
+  
+//  static int pos = 0;
+//  
+//  int newPos = encoder.getPosition();
+//  if (pos != newPos) {
+//    Serial.print(newPos);
+//    Serial.println();
+//    pos = newPos;
+//  } 
 }
 
 //long lastButtonPress = 0;

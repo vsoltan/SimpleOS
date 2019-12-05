@@ -13,7 +13,7 @@
 // RTC 
 
 void initRTC(RTC_Millis *rtc);
-DateTime getTime(RTC_Millis *rtc);
+void getTime(RTC_Millis *rtc, char *timeStamp);
 
 // ENCODER
 
