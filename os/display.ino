@@ -1,31 +1,37 @@
 
+#include "display.h"
+
 void initializeDisplay(OLED *display) {
   display->begin();
   display->setBusClock(BUS_CLOCK);
   display->setFont(DEFAULT_FONT);
 }
 
-DisplayStatus * createDisplayStatus() {
-    DisplayStatus *watchDisplay = NULL;
-    watchDisplay = (DisplayStatus *) malloc(sizeof(DisplayStatus));
-
-    if (watchDisplay == NULL) {
-      exit(EXIT_FAILURE);
-    }
-
-    watchDisplay->displayOn = 1;
-    return watchDisplay;
-}
-
 void wakeDisplay(OLED *display) {
+  Serial.println("WAKE");
   display->setPowerSave(0);
 }
 
 void sleepDisplay(OLED *display) {
+  Serial.println("SLEEP");
   display->setPowerSave(1);
 }
 
-void togglePower(bool displayOn, OLED *display) {
+DisplayInfo *createDisplayInfo() {
+  DisplayInfo *dinfo = NULL;
+  dinfo = (DisplayInfo *) malloc(sizeof(DisplayInfo));
+
+  if (dinfo == NULL) {
+    exit(EXIT_FAILURE);
+  }
+
+  dinfo->displayOn = 1;
+  dinfo->currPage = HOME;
+
+  return dinfo;
+}
+
+void togglePower(byte displayOn, OLED *display) {
   if (displayOn) {
       sleepDisplay(display);
   } else {
