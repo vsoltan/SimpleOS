@@ -12,6 +12,11 @@
 
 // RTC 
 
+typedef struct {
+  char timeStamp[9];
+  char date[30];
+} RTCData;
+
 void initRTC(RTC_Millis *rtc);
 void getTime(RTC_Millis *rtc, char *timeStamp);
 

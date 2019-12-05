@@ -11,8 +11,8 @@
 // APPLICATION ASSETS
 #define STOP_WATCH_ICON 0x23F1
 
-void drawHomeScreen(OLED *display);
+void drawHomeScreen(OLED *display, RTCData *rtcda);
 
-void updateScreen(OLED *display);
+void updateScreen(OLED *display, DisplayInfo *info, RTC_Millis *rtc);
 
 #endif

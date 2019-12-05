@@ -15,6 +15,7 @@
 
 #define heightScale 8
 #define widthScale 3
+#define PADDING 15
 
 #define centerHeight (UIScreenHeight - heightScale)/2
 

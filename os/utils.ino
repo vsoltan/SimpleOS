@@ -17,3 +17,17 @@ void getDate(RTC_Millis *rtc, char *date) {
     Serial.println(now.year(), DEC);
     sprintf(date, "%02hhu:%02hhu:%u", now.month(), now.day(), now.year());
 }
+
+RTCData *setRTCData(RTC_Millis *rtc) {
+  RTCData *rtcda = NULL;
+  rtcda = (RTCData *) malloc(sizeof(RTCData));
+
+  if (rtcda == NULL) {
+    exit(EXIT_FAILURE);
+  }
+
+  getTime(rtc, rtcda->timeStamp);
+  getDate(rtc, rtcda->date);
+  
+  return rtcda;
+}
