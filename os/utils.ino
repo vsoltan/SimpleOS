@@ -31,3 +31,12 @@ RTCData *setRTCData(RTC_Millis *rtc) {
   
   return rtcda;
 }
+
+// ENCODER NAVIGATION
+
+/*
+ * create a rotating queue of icons, to cycle through all possibilities on screen. 
+ * If you turn to the left and run out in that direction, instead of stopping, highlight
+ * the rightmost icon
+ */
+ */

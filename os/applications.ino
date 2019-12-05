@@ -1,7 +1,7 @@
 
 #include "display.h"
 
-char timeBuffer[6];
+char timeBuffer[9];
 
 void runStopWatchApp(OLED *display) {
   display->clearBuffer();
