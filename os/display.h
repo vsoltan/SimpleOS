@@ -2,42 +2,51 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include <U8g2lib.h>
+#include <Adafruit_GFX.h>    // Core graphics library
+#include <XTronical_ST7735.h> // Hardware-specific library
+#include <SPI.h>
+#include <Fonts/FreeMonoBoldOblique12pt7b.h>
 
-#define OLED U8G2_SSD1327_MIDAS_128X128_F_HW_I2C
-#define BUS_CLOCK 1500000
+#define ColorDisplay Adafruit_ST7735
+
 #define UIScreenWidth 128
 #define UIScreenHeight 128
+#define DEFAULT_FONT &FreeMonoBoldOblique12pt7b
+
 #define staticTime "12:45"
 
-// 8 pixel height font
-#define DEFAULT_FONT u8g2_font_ncenB08_tr
 
-#define heightScale 8
-#define widthScale 3
-#define PADDING 15
+#define TFT_SCLK 18         
+#define TFT_MOSI 23         
+#define TFT_CS    5        
+#define TFT_RST   2        
+#define TFT_DC    4
 
-#define centerHeight (UIScreenHeight - heightScale)/2
+#define LED      12
 
 enum PAGES {HOME, STOPWATCH};
 
 typedef struct {
+  
   byte displayOn;
+  uint8_t brightness;
   enum PAGES currPage;
+  
 } DisplayInfo;
 
 DisplayInfo *createDisplayInfo();
 
-void initializeDisplay(OLED *display);
+void initializeDisplay(ColorDisplay *display);
 
-void sleepDisplay(OLED *display);
+void sleepDisplay(ColorDisplay *display);
 
-void wakeDisplay(OLED *display);
+void wakeDisplay(ColorDisplay *display);
 
-void togglePower(byte displayOn, OLED *display);
+void togglePower(byte displayOn, ColorDisplay *display);
 
-// text manipulation
+void screenSaver();
 
-uint8_t getStringWidth(OLED *display, const char *string);
+void setBrightness(uint8_t value);
+
 
 #endif

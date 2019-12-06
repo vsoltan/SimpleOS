@@ -1,20 +1,28 @@
 
 #include "display.h"
 
-void initializeDisplay(OLED *display) {
-  display->begin();
-  display->setBusClock(BUS_CLOCK);
+void initializeDisplay(ColorDisplay *display) {
+  display->init();
+  setBrightness(255);
+  tft.setCursor(20, 30);
+  display->fillScreen(ST7735_WHITE);
+  display->setTextColor(ST7735_RED);
   display->setFont(DEFAULT_FONT);
+  ledcSetup(0, 5000, 8);
+  ledcAttachPin(LED, 0);
+  display->print(staticTime);
 }
 
-void wakeDisplay(OLED *display) {
-  Serial.println("WAKE");
-  display->setPowerSave(0);
+void setBrightness(uint8_t value) {
+  ledcWrite(0, value);
 }
 
-void sleepDisplay(OLED *display) {
-  Serial.println("SLEEP");
-  display->setPowerSave(1);
+void wakeDisplay(DisplayInfo *info) {
+  setBrightness(info->brightness);
+}
+
+void sleepDisplay() {
+  setBrightness(0);
 }
 
 DisplayInfo *createDisplayInfo() {
@@ -25,20 +33,18 @@ DisplayInfo *createDisplayInfo() {
     exit(EXIT_FAILURE);
   }
 
-  dinfo->displayOn = 1;
+  dinfo->displayOn = 0;
   dinfo->currPage = HOME;
+  dinfo->brightness = 255;
 
   return dinfo;
 }
 
-void togglePower(byte displayOn, OLED *display) {
-  if (displayOn) {
-      sleepDisplay(display);
+void togglePower(DisplayInfo *info) {
+  if (info->displayOn) {
+      sleepDisplay();
   } else {
-      wakeDisplay(display);
+      wakeDisplay(info);
   }
-}
-
-uint8_t getStringWidth(OLED *display, const char *string) {
-  return display->getUTF8Width(string);
+  info->displayOn = !info->displayOn;
 }

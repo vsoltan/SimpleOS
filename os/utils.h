@@ -6,9 +6,10 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#define NAV_BUTTON 0
-#define RO_A 4
-#define RO_B 5
+#define ECLK 15 // A
+#define EDA 13  // B
+#define NAV_BUTTON 14
+#define PWR 27
 
 // RTC 
 

@@ -36,21 +36,21 @@ void Icon::Highlight() {
   // set colored border to indicate where the encoder is
 }
 
-void drawHomeScreen(OLED *display, RTCData *rtcda) {
-    display->clearBuffer();
-    display->sendBuffer();
+void drawHomeScreen(ColorDisplay *display, RTCData *rtcda) {
+
+
 }
 
-void updateScreen(OLED *display, DisplayInfo *info, RTC_Millis *rtc) {
+void updateScreen(ColorDisplay *display, DisplayInfo *info, RTC_Millis *rtc) {
+  // check if the screen should be on or off
+  togglePower(info->displayOn, display); 
+  
   switch (info->currPage) {
     case HOME:
-      getTime(rtc, rtcda->timeStamp);
-      display->clearBuffer();      
-      display->setFont(u8g2_font_ncenB08_tr); 
-      display->drawStr(0, centerHeight, rtcda->timeStamp);
-      display->drawStr(0, centerHeight + PADDING, rtcda->date);
-      display->sendBuffer();         
-      rtcda->timeStamp[0] = '\0'; // clear buffer
+//      getTime(rtc, rtcda->timeStamp);      
+//      display->drawStr(0, centerHeight, rtcda->timeStamp);
+//      display->drawStr(0, centerHeight + PADDING, rtcda->date);
+//      rtcda->timeStamp[0] = '\0'; // clear buffer
       break;
     case STOPWATCH:
       break;

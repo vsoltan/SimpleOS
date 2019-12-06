@@ -1,3 +1,3 @@
 
-#define DEBOUNCE 300
+#define DEBOUNCE 100
 #define POWERBUTTON 0

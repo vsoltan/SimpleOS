@@ -4,7 +4,7 @@
 // RTC
 
 void initRTC(RTC_Millis *rtc) {
-    rtc->begin(DateTime(__DATE__, __TIME__)); 
+    rtc->begin(DateTime(__DATE__, __TIME__));
 }
 
 void getTime(RTC_Millis *rtc, char *timeStamp) {
@@ -28,15 +28,14 @@ RTCData *setRTCData(RTC_Millis *rtc) {
 
   getTime(rtc, rtcda->timeStamp);
   getDate(rtc, rtcda->date);
-  
+
   return rtcda;
 }
 
 // ENCODER NAVIGATION
 
 /*
- * create a rotating queue of icons, to cycle through all possibilities on screen. 
+ * create a rotating queue of icons, to cycle through all possibilities on screen.
  * If you turn to the left and run out in that direction, instead of stopping, highlight
  * the rightmost icon
- */
  */
