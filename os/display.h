@@ -22,7 +22,8 @@
 #define TFT_RST   2        
 #define TFT_DC    4
 
-#define LED      12
+// LCD pin attached to GPIO instead of 3v3 for PWM brightness
+#define LCD      12
 
 enum PAGES {HOME, STOPWATCH};
 

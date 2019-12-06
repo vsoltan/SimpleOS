@@ -8,19 +8,17 @@
 // UTILITIES
 
 ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
-
-//RTC_Millis rtc;
 RotaryEncoder encoder(EDA, ECLK);
-
 DisplayInfo *tftInfo;
 
+//RTC_Millis rtc;
 //RTCData *rtcda;
 
 // GLOBALS
 
 volatile unsigned long lastclick_time = 0;
 unsigned timeUpdateTick = 0;
-static uint8_t pos = 0;
+static int pos = 0;
 
 void setup() {
     Serial.begin(BAUD);
@@ -51,7 +49,7 @@ void loop() {
   }
   prev_state = curr_state;
 
-    int newPos = encoder.getPosition();
+  int newPos = encoder.getPosition();
   if (pos != newPos) {
     Serial.print(newPos);
     Serial.println();

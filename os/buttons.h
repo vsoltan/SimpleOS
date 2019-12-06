@@ -1,3 +1,4 @@
 
-#define DEBOUNCE 100
+#define DEBOUNCE 300
 #define POWERBUTTON 0
+#define NAV_BUTTON 14

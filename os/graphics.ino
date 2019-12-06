@@ -7,6 +7,7 @@ class Icon {
   private:
     uint8_t width;
     uint8_t height;
+    char *icon;
     bool isHighlighted;
     char *label;
     
@@ -34,6 +35,7 @@ uint8_t Icon::getHeight() {
 
 void Icon::Highlight() {
   // set colored border to indicate where the encoder is
+  
 }
 
 void drawHomeScreen(ColorDisplay *display, RTCData *rtcda) {
@@ -42,9 +44,6 @@ void drawHomeScreen(ColorDisplay *display, RTCData *rtcda) {
 }
 
 void updateScreen(ColorDisplay *display, DisplayInfo *info, RTC_Millis *rtc) {
-  // check if the screen should be on or off
-  togglePower(info->displayOn, display); 
-  
   switch (info->currPage) {
     case HOME:
 //      getTime(rtc, rtcda->timeStamp);      

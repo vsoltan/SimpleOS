@@ -3,14 +3,15 @@
 
 void initializeDisplay(ColorDisplay *display) {
   display->init();
-  setBrightness(255);
-  tft.setCursor(20, 30);
+  display->setCursor(20, 30);
   display->fillScreen(ST7735_WHITE);
   display->setTextColor(ST7735_RED);
   display->setFont(DEFAULT_FONT);
   ledcSetup(0, 5000, 8);
-  ledcAttachPin(LED, 0);
-  display->print(staticTime);
+  ledcAttachPin(LCD, 0);
+  setBrightness(255);
+//  display->print(staticTime);
+  display->drawBitmap(0, 0, heart, 15, 15, ST7735_BLUE); 
 }
 
 void setBrightness(uint8_t value) {
