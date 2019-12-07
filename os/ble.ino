@@ -22,7 +22,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 
 void initBLE() {
   
-  BLEDevice::init("DumbWatch");
+  BLEDevice::init("VAL'S DUMBWATCH");
   BLEServer *pServer = BLEDevice::createServer();
 
   BLEService *pService = pServer->createService(SERVICE_UUID);

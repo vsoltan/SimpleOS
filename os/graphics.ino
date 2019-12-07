@@ -1,28 +1,22 @@
 
 #include "graphics.h"
 
-//display->drawStr((UIScreenWidth - widthScale * getStringWidth(&u8g2, staticTime))/2, centerHeight, "Hello World!");
-
-class Icon {
-  private:
-    uint8_t width;
-    uint8_t height;
-    char *icon;
-    bool isHighlighted;
-    char *label;
-    
-  public:
-    Icon(uint8_t width, uint8_t height, char *label);
-    uint8_t getWidth();
-    uint8_t getHeight();
-    void Highlight();
-};
-
-Icon::Icon(uint8_t width, uint8_t height, char *label) {
+Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label) {
+    this->x = x;
+    this->y = y; 
     this->width = width;
-    this->width = height;
+    this->height = height;
+    this->icon = icon;
     this->label = label;
     this->isHighlighted = false;
+}
+
+uint8_t Icon::getX() {
+  return this->x;
+}
+
+uint8_t Icon::getY() {
+  return this->y;
 }
 
 uint8_t Icon::getWidth() {
@@ -33,17 +27,38 @@ uint8_t Icon::getHeight() {
   return this->height;
 }
 
-void Icon::Highlight() {
-  // set colored border to indicate where the encoder is
-  
+void Icon::setHighlight(bool value) {
+  this->isHighlighted = value; 
 }
 
-void drawHomeScreen(ColorDisplay *display, RTCData *rtcda) {
-
-
+void Icon::renderHighlight(ColorDisplay *display) {
+  // set colored border to indicate icon is selected
+    display->drawRect(this->x - highlightPadding, this->y - highlightPadding, this->width + highlightPadding, this->height + highlightPadding, ST7735_RED);
 }
 
-void updateScreen(ColorDisplay *display, DisplayInfo *info, RTC_Millis *rtc) {
+void Icon::removeHighlight(ColorDisplay *display) {
+  // set colored border to indicate icon is selected
+    display->drawRect(this->x - highlightPadding, this->y - highlightPadding, this->width + highlightPadding, this->height + highlightPadding, ST7735_WHITE);
+}
+
+void Icon::drawIcon(ColorDisplay *display) {
+   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, ST7735_BLUE);
+}
+
+void drawHomeScreen(ColorDisplay *display) {
+  display->setCursor(20, 30);
+  display->print(staticTime);
+}
+
+void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
+  int newPos = encoder->getPosition();
+  if (newPos != *pos) {
+    
+    *pos = newPos;
+  }  
+}
+
+void updateScreen(ColorDisplay *display, DisplayInfo *info) {
   switch (info->currPage) {
     case HOME:
 //      getTime(rtc, rtcda->timeStamp);      

@@ -19,8 +19,4 @@ typedef struct {
 void initRTC(RTC_Millis *rtc);
 void getTime(RTC_Millis *rtc, char *timeStamp);
 
-// ENCODER
-
-int getPosition();
-
 #endif

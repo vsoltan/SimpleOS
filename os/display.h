@@ -5,16 +5,18 @@
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <XTronical_ST7735.h> // Hardware-specific library
 #include <SPI.h>
-#include <Fonts/FreeMonoBoldOblique12pt7b.h>
+#include <Fonts/FreeMonoBold12pt7b.h>
 
 #define ColorDisplay Adafruit_ST7735
+#define DEFAULT_BACKGROUND ST7735_WHITE
 
 #define UIScreenWidth 128
 #define UIScreenHeight 128
-#define DEFAULT_FONT &FreeMonoBoldOblique12pt7b
+
+#define DEFAULT_FONT &FreeMonoBold12pt7b
+#define FONT_SIZE 12
 
 #define staticTime "12:45"
-
 
 #define TFT_SCLK 18         
 #define TFT_MOSI 23         

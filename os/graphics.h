@@ -5,12 +5,35 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-// APPLICATION ASSETS
-#define STOP_WATCH_ICON 0x23F1
+#define highlightPadding 10
 
-void drawHomeScreen(ColorDisplay *display, RTCData *rtcda);
+class Icon {
+  private:
+    uint8_t x;
+    uint8_t y;
+    uint8_t width;
+    uint8_t height;
+    const unsigned char *icon;
+    bool isHighlighted;
+    const char *label;
+    
+  public:
+    Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label);
+    uint8_t getX();
+    uint8_t getY();
+    uint8_t getWidth();
+    uint8_t getHeight();
+    void setHighlight(bool value);
+    void renderHighlight(ColorDisplay *display);
+    void removeHighlight(ColorDisplay *display);
+    void drawIcon(ColorDisplay *display);
+};
 
-void updateScreen(ColorDisplay *display, DisplayInfo *info, RTC_Millis *rtc);
+// add RTC as param
+void drawHomeScreen(ColorDisplay *display);
+
+// add RTC as param
+void updateScreen(ColorDisplay *display, DisplayInfo *info);
 
 const unsigned char PROGMEM heart[] =
 
@@ -33,9 +56,8 @@ const unsigned char PROGMEM heart[] =
 
 };
 
+Icon **homePageNav();
 
-
-
-
+void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
 
 #endif

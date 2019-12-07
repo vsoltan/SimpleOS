@@ -32,7 +32,13 @@ RTCData *setRTCData(RTC_Millis *rtc) {
   return rtcda;
 }
 
-// ENCODER NAVIGATION
+// ENCODER
+
+uint8_t bidirMod(int8_t n, uint8_t m) {
+  if (n < 0) {
+    return bidirMod(n + m, m);
+  } return n % m;
+}
 
 /*
  * create a rotating queue of icons, to cycle through all possibilities on screen.
