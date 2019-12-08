@@ -45,7 +45,7 @@ void sleepDisplay(ColorDisplay *display);
 
 void wakeDisplay(ColorDisplay *display);
 
-void togglePower(byte displayOn, ColorDisplay *display);
+void togglePower(DisplayInfo *info);
 
 void screenSaver();
 

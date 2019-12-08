@@ -3,7 +3,7 @@
 
 void initializeDisplay(ColorDisplay *display) {
   display->init();
-  display->setCursor(20, 30);
+  display->setCursor(30, 30);
   display->fillScreen(DEFAULT_BACKGROUND);
   display->setTextColor(ST7735_RED);
   display->setFont(DEFAULT_FONT);

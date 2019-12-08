@@ -19,4 +19,6 @@ typedef struct {
 void initRTC(RTC_Millis *rtc);
 void getTime(RTC_Millis *rtc, char *timeStamp);
 
+uint8_t bidirMod(int8_t n, uint8_t m);
+
 #endif

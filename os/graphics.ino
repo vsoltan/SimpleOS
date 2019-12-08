@@ -59,15 +59,6 @@ void drawPageNav(Icon **appIcons, ColorDisplay *display) {
   }
 }
 
-void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
-  int newPos = encoder->getPosition();
-  if (*pos != newPos) {
-    icons[bidirMod(newPos, 3)]->renderHighlight(&tft);
-    icons[bidirMod(*pos, 3)]->removeHighlight(&tft);
-    *pos = newPos;
-  } 
-}
-
 //void runApp(Icon *app) {
 //  switch(app->getLabel()) {
 //    case "stopwatch": 

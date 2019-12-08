@@ -61,8 +61,6 @@ const unsigned char PROGMEM heart[] =
 
 void drawPageNav(Icon **appIcons, ColorDisplay *display);
 
-void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
-
 void runApp(Icon *app);
 
 #endif
