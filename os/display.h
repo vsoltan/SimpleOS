@@ -51,5 +51,8 @@ void screenSaver();
 
 void setBrightness(uint8_t value);
 
+// TEXT MANIP
+//    tft.getTextBounds(staticTime, 20, 30, &x1, &ya, &w, &h);
+//    Serial.println(w);
 
 #endif

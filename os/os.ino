@@ -2,6 +2,7 @@
 #include "graphics.h"
 #include "buttons.h"
 #include "ble.h"
+#include "applications.h"
 
 #define BAUD 115200
 
@@ -11,7 +12,9 @@ ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 RotaryEncoder encoder(EDA, ECLK);
 
 DisplayInfo *tftInfo;
-Icon *pageIcons[2];
+Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health"), new Icon(50, 60, 16, 16, heart, "Stopwatch"), new Icon(80, 60, 16, 16, heart, "Music") };
+Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop"), new Icon(50, 60, 16, 16, heart, "Clear"), new Icon(80, 60, 16, 16, heart, "Back") };
+//Icon *pageIcons[3];
 
 
 //RTC_Millis rtc;
@@ -22,7 +25,7 @@ Icon *pageIcons[2];
 
 volatile unsigned long lastclick_time = 0;
 unsigned timeUpdateTick = 0;
-static int pos = 0;
+int pos = -1;
 
 int16_t x1, ya;
 uint16_t w, h;
@@ -30,21 +33,9 @@ uint16_t w, h;
 void setup() {
     Serial.begin(BAUD);
     initializeDisplay(&tft);
+    drawPageNav(homeIcons, &tft);
     initBLE();
     tftInfo = createDisplayInfo();
-
-    pageIcons[0] = new Icon(20, 60, 16, 16, heart, "Health");
-    pageIcons[1] = new Icon(50, 60, 16, 16, heart, "Stopwatch");
-    pageIcons[2] = new Icon(80, 60, 16, 16, heart, "Music");
-
-    pageIcons[0]->drawIcon(&tft);
-    pageIcons[1]->drawIcon(&tft);
-    pageIcons[2]->drawIcon(&tft);
-
-    Serial.println(bidirMod(-50, 15));
-
-//    tft.getTextBounds(staticTime, 20, 30, &x1, &ya, &w, &h);
-//    Serial.println(w);
 
 //    drawHomeScreen(&u8g2, rtcda);
 //    initRTC(&rtc);
@@ -69,13 +60,6 @@ void loop() {
   }
   prev_state = curr_state;
 
-  int newPos = encoder.getPosition();
-  if (pos != newPos) {
-    Serial.print(bidirMod(newPos, 3));
-    pageIcons[bidirMod(newPos, 3)]->renderHighlight(&tft);
-    Serial.println();
-    pageIcons[bidirMod(pos, 3)]->removeHighlight(&tft);
-    pos = newPos;
-  } 
+  navigate(&encoder, homeIcons, &pos);
 }
   

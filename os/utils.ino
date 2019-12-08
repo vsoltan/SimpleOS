@@ -39,9 +39,3 @@ uint8_t bidirMod(int8_t n, uint8_t m) {
     return bidirMod(n + m, m);
   } return n % m;
 }
-
-/*
- * create a rotating queue of icons, to cycle through all possibilities on screen.
- * If you turn to the left and run out in that direction, instead of stopping, highlight
- * the rightmost icon
- */

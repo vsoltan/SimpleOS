@@ -2,10 +2,12 @@
 #include "display.h"
 #include "utils.h"
 
+
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#define highlightPadding 10
+#define highlightPadding 5
+#define NAV_TICKRATE 2
 
 class Icon {
   private:
@@ -23,6 +25,7 @@ class Icon {
     uint8_t getY();
     uint8_t getWidth();
     uint8_t getHeight();
+    const char *getLabel();
     void setHighlight(bool value);
     void renderHighlight(ColorDisplay *display);
     void removeHighlight(ColorDisplay *display);
@@ -56,8 +59,10 @@ const unsigned char PROGMEM heart[] =
 
 };
 
-Icon **homePageNav();
+void drawPageNav(Icon **appIcons, ColorDisplay *display);
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
+
+void runApp(Icon *app);
 
 #endif
