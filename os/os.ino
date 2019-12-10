@@ -12,15 +12,16 @@ ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 RotaryEncoder encoder(EDA, ECLK);
 
 DisplayInfo *tftInfo;
-Window *window;
 
-Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health"), new Icon(55, 60, 16, 16, heart, "Stopwatch"), new Icon(90, 60, 16, 16, heart, "Music") };
-Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop"), new Icon(50, 60, 16, 16, heart, "Clear"), new Icon(80, 60, 16, 16, heart, "Back") };
+
+Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", 0), new Icon(55, 60, 16, 16, heart, "Stopwatch", 1), new Icon(90, 60, 16, 16, heart, "Music", 0) };
+Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(50, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(80, 60, 16, 16, heart, "Back", HOME_D) };
+
+Window *window = new Window(homeIcons, 0);
 
 //Icon *pageIcons[3];
 //RTC_Millis rtc;
 //RTCData *rtcda;
-
 
 // GLOBALS
 
@@ -57,7 +58,6 @@ void loop() {
 
   navigate(&encoder, homeIcons, &pos);
 
-
   byte curr_pwr_state = digitalRead(POWERBUTTON);
   byte curr_nav_state = digitalRead(NAV_BUTTON);
 
@@ -65,10 +65,15 @@ void loop() {
       togglePower(tftInfo);
       lastPowerPress = millis();
   }
-  if (curr_nav_state == 0 && prev_nav_state == 1 && millis() >= lastNavPress + DEBOUNCE) {
-      togglePower(tftInfo);
-      // window->runApp();
-      lastPowerPress = millis();
+
+  if (curr_nav_state == 0 && prev_nav_state == 1 && millis() >= lastNavPress + DEBOUNCE * 2) {
+    if (window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor() != window->getDescriptor()) {
+      Serial.println("YOOOO");
+    }
+    Serial.println(window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor());
+    Serial.println(tftInfo->currPage);
+    
+    lastPowerPress = millis();
   }
 
   prev_pwr_state = curr_pwr_state;

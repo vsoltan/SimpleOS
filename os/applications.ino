@@ -7,12 +7,12 @@ Window::Window(Icon **applications, uint8_t desc) {
   this->descriptor = desc;
 }
 
-void Window::runApp(uint8_t button) {
-
-}
-
 uint8_t Window::getDescriptor() {
   return this->descriptor;
+}
+
+Icon **Window::getApplications() {
+  return this->applications;
 }
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {

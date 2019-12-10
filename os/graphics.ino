@@ -1,14 +1,14 @@
 
 #include "graphics.h"
 
-Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label) {
+Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor) {
     this->x = x;
     this->y = y; 
     this->width = width;
     this->height = height;
     this->icon = icon;
     this->label = label;
-    this->isHighlighted = false;
+    this->destinationDescriptor = descriptor;
 }
 
 uint8_t Icon::getX() {
@@ -31,10 +31,6 @@ const char *Icon::getLabel() {
   return this->label;
 }
 
-void Icon::setHighlight(bool value) {
-  this->isHighlighted = value; 
-}
-
 void Icon::renderHighlight(ColorDisplay *display) {
   // set colored border to indicate icon is selected
     display->drawRect(this->x - highlightPadding, this->y - highlightPadding, this->width + 2 * highlightPadding, this->height + 2 * highlightPadding, ST7735_RED);
@@ -46,6 +42,10 @@ void Icon::removeHighlight(ColorDisplay *display) {
 
 void Icon::drawIcon(ColorDisplay *display) {
    display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, ST7735_BLUE);
+}
+
+uint8_t Icon::getDestinationDescriptor() {
+  return this->destinationDescriptor;  
 }
 
 void drawHomeScreen(ColorDisplay *display) {
@@ -69,14 +69,8 @@ void drawPageNav(Icon **appIcons, ColorDisplay *display) {
 //}
 
 void updateScreen(ColorDisplay *display, DisplayInfo *info) {
-  switch (info->currPage) {
-    case HOME:
 //      getTime(rtc, rtcda->timeStamp);      
 //      display->drawStr(0, centerHeight, rtcda->timeStamp);
 //      display->drawStr(0, centerHeight + PADDING, rtcda->date);
 //      rtcda->timeStamp[0] = '\0'; // clear buffer
-      break;
-    case STOPWATCH:
-      break;
-  }
 }

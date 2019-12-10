@@ -3,6 +3,7 @@
 
 void initializeDisplay(ColorDisplay *display) {
   display->init();
+  display->setRotation(0);
   display->setCursor(30, 30);
   display->fillScreen(DEFAULT_BACKGROUND);
   display->setTextColor(ST7735_RED);
@@ -34,7 +35,7 @@ DisplayInfo *createDisplayInfo() {
   }
 
   dinfo->displayOn = 0;
-  dinfo->currPage = HOME;
+  dinfo->currPage = HOME_D;
   dinfo->brightness = 255;
 
   return dinfo;

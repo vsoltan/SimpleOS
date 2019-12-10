@@ -3,7 +3,7 @@
 
 void initBLE() {
   
-  BLEDevice::init("VAL'S DUMBWATCH");
+  BLEDevice::init("DumbWatch");
   BLEServer *pServer = BLEDevice::createServer();
 
   BLEService *pService = pServer->createService(SERVICE_UUID);

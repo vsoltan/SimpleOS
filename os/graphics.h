@@ -16,20 +16,20 @@ class Icon {
     uint8_t width;
     uint8_t height;
     const unsigned char *icon;
-    bool isHighlighted;
     const char *label;
+    uint8_t destinationDescriptor;
     
   public:
-    Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label);
+    Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor);
     uint8_t getX();
     uint8_t getY();
     uint8_t getWidth();
     uint8_t getHeight();
     const char *getLabel();
-    void setHighlight(bool value);
     void renderHighlight(ColorDisplay *display);
     void removeHighlight(ColorDisplay *display);
     void drawIcon(ColorDisplay *display);
+    uint8_t getDestinationDescriptor();
 };
 
 // add RTC as param

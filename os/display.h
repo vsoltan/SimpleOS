@@ -27,13 +27,14 @@
 // LCD pin attached to GPIO instead of 3v3 for PWM brightness
 #define LCD      12
 
-enum PAGES {HOME, STOPWATCH};
+#define HOME_D   0
+#define SWATCH_D 1
 
 typedef struct {
   
   byte displayOn;
   uint8_t brightness;
-  enum PAGES currPage;
+  uint8_t currPage;
   
 } DisplayInfo;
 
