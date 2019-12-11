@@ -33,7 +33,7 @@ const char *Icon::getLabel() {
 
 void Icon::renderHighlight(ColorDisplay *display) {
   // set colored border to indicate icon is selected
-    display->drawRect(this->x - highlightPadding, this->y - highlightPadding, this->width + 2 * highlightPadding, this->height + 2 * highlightPadding, ST7735_RED);
+    display->drawRect(this->x - highlightPadding, this->y - highlightPadding, this->width + 2 * highlightPadding, this->height + 2 * highlightPadding, DEFAULT_HIGHLIGHT);
 }
 
 void Icon::removeHighlight(ColorDisplay *display) {
@@ -41,7 +41,7 @@ void Icon::removeHighlight(ColorDisplay *display) {
 }
 
 void Icon::drawIcon(ColorDisplay *display) {
-   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, ST7735_BLUE);
+   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, DEFAULT_ICON_COLOR);
 }
 
 uint8_t Icon::getDestinationDescriptor() {
@@ -53,24 +53,13 @@ void drawHomeScreen(ColorDisplay *display) {
   display->print(staticTime);
 }
 
-void drawPageNav(Icon **appIcons, ColorDisplay *display) {
+void drawStopWatchScreen(ColorDisplay *display) {
+  display->setCursor(0, 20);
+  display->print("00:00:00");
+}
+
+void drawPageIcons(Icon **appIcons, ColorDisplay *display) {
   for (int i = 0; i < 3; i = i + 1) {
     appIcons[i]->drawIcon(display);
   }
-}
-
-//void runApp(Icon *app) {
-//  switch(app->getLabel()) {
-//    case "stopwatch": 
-//      
-//      break;
-//    default: 
-//  }
-//}
-
-void updateScreen(ColorDisplay *display, DisplayInfo *info) {
-//      getTime(rtc, rtcda->timeStamp);      
-//      display->drawStr(0, centerHeight, rtcda->timeStamp);
-//      display->drawStr(0, centerHeight + PADDING, rtcda->date);
-//      rtcda->timeStamp[0] = '\0'; // clear buffer
 }

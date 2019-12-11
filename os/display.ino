@@ -3,10 +3,10 @@
 
 void initializeDisplay(ColorDisplay *display) {
   display->init();
-  display->setRotation(0);
+  display->setRotation(2);
   display->setCursor(30, 30);
   display->fillScreen(DEFAULT_BACKGROUND);
-  display->setTextColor(ST7735_RED);
+  display->setTextColor(DEFAULT_TEXT_COLOR);
   display->setFont(DEFAULT_FONT);
   ledcSetup(0, 5000, 8);
   ledcAttachPin(LCD, 0);

@@ -2,26 +2,49 @@
 #include "applications.h"
 #include "display.h"
 
-Window::Window(Icon **applications, uint8_t desc) {
+Window::Window(Icon **applications) {
   this->applications = applications;
-  this->descriptor = desc;
-}
-
-uint8_t Window::getDescriptor() {
-  return this->descriptor;
 }
 
 Icon **Window::getApplications() {
   return this->applications;
 }
 
+void Window::setApplications(Icon **newApps) {
+  this->applications = newApps;
+}
+
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
     int newPos = encoder->getPosition();
+    //int numApps = sizeof(icons) / sizeof(icons[0]);
+    //Serial.println(numApps);
+
+    // TODO: change 3 to numapps
     if (*pos != newPos) {
         icons[bidirMod(newPos, 3)]->renderHighlight(&tft);
         icons[bidirMod(*pos, 3)]->removeHighlight(&tft);
         *pos = newPos;
     }
+}
+
+void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window) {
+  display->fillScreen(DEFAULT_BACKGROUND);
+  drawPageIcons(window->getApplications(), display);
+  
+  switch(info->currPage) {
+    case HOME_D: 
+      drawHomeScreen(display);
+      break;
+    case SWATCH_D: 
+      drawStopWatchScreen(display);
+      break;
+    default:
+      break;
+  }
+}
+
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window) {
+ 
 }
 
 //char timeBuffer[9];

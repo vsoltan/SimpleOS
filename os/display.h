@@ -8,7 +8,10 @@
 #include <Fonts/FreeMonoBold12pt7b.h>
 
 #define ColorDisplay Adafruit_ST7735
-#define DEFAULT_BACKGROUND ST7735_WHITE
+#define DEFAULT_BACKGROUND ST7735_BLACK
+#define DEFAULT_TEXT_COLOR ST7735_WHITE
+#define DEFAULT_ICON_COLOR ST7735_RED
+#define DEFAULT_HIGHLIGHT  ST7735_GREEN
 
 #define UIScreenWidth 128
 #define UIScreenHeight 128

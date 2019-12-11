@@ -35,8 +35,7 @@ class Icon {
 // add RTC as param
 void drawHomeScreen(ColorDisplay *display);
 
-// add RTC as param
-void updateScreen(ColorDisplay *display, DisplayInfo *info);
+void drawStopWatchScreen(ColorDisplay *display);
 
 const unsigned char PROGMEM heart[] =
 
@@ -50,7 +49,7 @@ const unsigned char PROGMEM heart[] =
   B00111111, B11111100,
   B00011111, B11111000,
   B00001111, B11110000,
-  B00000111, B11100000,
+  B00000111, B11100000, 
   B00000011, B11000000,
   B00000001, B10000000,
   B00000000, B00000000,
@@ -59,7 +58,7 @@ const unsigned char PROGMEM heart[] =
 
 };
 
-void drawPageNav(Icon **appIcons, ColorDisplay *display);
+void drawPageIcons(Icon **appIcons, ColorDisplay *display);
 
 void runApp(Icon *app);
 

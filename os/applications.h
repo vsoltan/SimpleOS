@@ -8,16 +8,27 @@ class Window {
   
   private:
     Icon **applications;
-    uint8_t descriptor;
 
   public:
-    Window(Icon **applications, uint8_t desc);
-    uint8_t getDescriptor();
+    Window(Icon **applications);
     Icon **getApplications();
+    void setApplications(Icon **newApps);
 
 };
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
 
+
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window);
+
+void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window);
+
+// add RTC as param
+void updateScreenPeriodically();
+
+//      getTime(rtc, rtcda->timeStamp);      
+//      display->drawStr(0, centerHeight, rtcda->timeStamp);
+//      display->drawStr(0, centerHeight + PADDING, rtcda->date);
+//      rtcda->timeStamp[0] = '\0'; // clear buffer
 
 #endif

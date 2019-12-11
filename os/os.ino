@@ -13,11 +13,10 @@ RotaryEncoder encoder(EDA, ECLK);
 
 DisplayInfo *tftInfo;
 
+Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
+Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
 
-Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", 0), new Icon(55, 60, 16, 16, heart, "Stopwatch", 1), new Icon(90, 60, 16, 16, heart, "Music", 0) };
-Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(50, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(80, 60, 16, 16, heart, "Back", HOME_D) };
-
-Window *window = new Window(homeIcons, 0);
+Window *window = new Window(homeIcons);
 
 //Icon *pageIcons[3];
 //RTC_Millis rtc;
@@ -32,7 +31,7 @@ int pos = 0;
 void setup() {
     Serial.begin(BAUD);
     initializeDisplay(&tft);
-    drawPageNav(homeIcons, &tft);
+    drawPageIcons(homeIcons, &tft);
     initBLE();
     tftInfo = createDisplayInfo();
 
@@ -50,6 +49,7 @@ long lastNavPress = 0;
 byte prev_pwr_state = 1;
 byte prev_nav_state = 1;
 
+uint8_t rotatingDescriptor = HOME_D;
 
 // update screen based on which window is open
 
@@ -57,6 +57,8 @@ void loop() {
   encoder.tick();
 
   navigate(&encoder, homeIcons, &pos);
+
+  rotatingDescriptor = window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor();
 
   byte curr_pwr_state = digitalRead(POWERBUTTON);
   byte curr_nav_state = digitalRead(NAV_BUTTON);
@@ -67,11 +69,14 @@ void loop() {
   }
 
   if (curr_nav_state == 0 && prev_nav_state == 1 && millis() >= lastNavPress + DEBOUNCE * 2) {
-    if (window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor() != window->getDescriptor()) {
-      Serial.println("YOOOO");
+
+    if (rotatingDescriptor != tftInfo->currPage) {
+      tftInfo->currPage = rotatingDescriptor;
+      window->setApplications(stopWatch);
+      drawScreen(&tft, tftInfo, window);
+    } else {
+      updateScreen(&tft, tftInfo, window);
     }
-    Serial.println(window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor());
-    Serial.println(tftInfo->currPage);
     
     lastPowerPress = millis();
   }
