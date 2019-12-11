@@ -14,6 +14,21 @@ void Window::setApplications(Icon **newApps) {
   this->applications = newApps;
 }
 
+//Icon *initApps() {
+//  Icon *allApps[2][3] = {
+//    { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) },
+//    { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) }
+//  };
+//
+////  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
+////  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
+////
+////  allApps[HOME_D] = homeIcons;
+////  allApps[SWATCH_D] = stopWatch;
+//
+//  return allApps;
+//}
+
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
     int newPos = encoder->getPosition();
     //int numApps = sizeof(icons) / sizeof(icons[0]);

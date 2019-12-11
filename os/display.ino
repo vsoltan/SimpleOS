@@ -4,7 +4,7 @@
 void initializeDisplay(ColorDisplay *display) {
   display->init();
   display->setRotation(2);
-  display->setCursor(30, 30);
+  display->setCursor(40, 30);
   display->fillScreen(DEFAULT_BACKGROUND);
   display->setTextColor(DEFAULT_TEXT_COLOR);
   display->setFont(DEFAULT_FONT);

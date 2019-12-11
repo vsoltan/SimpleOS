@@ -16,8 +16,9 @@ class Window {
 
 };
 
-void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
+Icon *initApps();
 
+void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
 
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window);
 

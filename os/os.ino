@@ -16,9 +16,10 @@ DisplayInfo *tftInfo;
 Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
 Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
 
-Window *window = new Window(homeIcons);
+Icon **apps[2][3] = {homeIcons, stopWatch};
 
-//Icon *pageIcons[3];
+Window *window;
+
 //RTC_Millis rtc;
 //RTCData *rtcda;
 
@@ -31,7 +32,8 @@ int pos = 0;
 void setup() {
     Serial.begin(BAUD);
     initializeDisplay(&tft);
-    drawPageIcons(homeIcons, &tft);
+    window = new Window(*apps[0]);
+    drawPageIcons(window->getApplications(), &tft);
     initBLE();
     tftInfo = createDisplayInfo();
 
@@ -72,10 +74,11 @@ void loop() {
 
     if (rotatingDescriptor != tftInfo->currPage) {
       tftInfo->currPage = rotatingDescriptor;
+      pos = 0;
       window->setApplications(stopWatch);
       drawScreen(&tft, tftInfo, window);
     } else {
-      updateScreen(&tft, tftInfo, window);
+      updateScreenOnClick(&tft, tftInfo, window);
     }
     
     lastPowerPress = millis();
