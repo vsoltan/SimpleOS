@@ -48,9 +48,14 @@ uint8_t Icon::getDestinationDescriptor() {
   return this->destinationDescriptor;  
 }
 
-void drawHomeScreen(ColorDisplay *display) {
-  display->setCursor(20, 30);
-  display->print(staticTime);
+Icon **generateHomeIcons() {
+  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
+  return homeIcons;
+}
+
+Icon **generateStopwatchIcons() {
+  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
+  return stopWatch;
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {

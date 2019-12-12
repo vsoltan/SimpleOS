@@ -11,7 +11,6 @@ void initializeDisplay(ColorDisplay *display) {
   ledcSetup(0, 5000, 8);
   ledcAttachPin(LCD, 0);
   setBrightness(255);
-  drawHomeScreen(display);
 }
 
 void setBrightness(uint8_t value) {

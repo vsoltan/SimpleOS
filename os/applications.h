@@ -16,7 +16,7 @@ class Window {
 
 };
 
-Icon *initApps();
+Window **initWindows();
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos);
 
@@ -25,11 +25,6 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
 void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window);
 
 // add RTC as param
-void updateScreenPeriodically();
-
-//      getTime(rtc, rtcda->timeStamp);      
-//      display->drawStr(0, centerHeight, rtcda->timeStamp);
-//      display->drawStr(0, centerHeight + PADDING, rtcda->date);
-//      rtcda->timeStamp[0] = '\0'; // clear buffer
+void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc);
 
 #endif

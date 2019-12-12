@@ -28,7 +28,7 @@
 #define TFT_DC    4
 
 // LCD pin attached to GPIO instead of 3v3 for PWM brightness
-#define LCD      12
+#define LCD      16
 
 #define HOME_D   0
 #define SWATCH_D 1

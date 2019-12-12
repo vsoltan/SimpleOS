@@ -9,7 +9,7 @@ void initRTC(RTC_Millis *rtc) {
 
 void getTime(RTC_Millis *rtc, char *timeStamp) {
     DateTime now = rtc->now();
-    sprintf(timeStamp, "%02hhu:%02hhu:%02hhu", now.hour(), now.minute(), now.second());
+    sprintf(timeStamp, "%02hhu:%02hhu", now.hour(), now.minute());
 }
 
 void getDate(RTC_Millis *rtc, char *date) {

@@ -14,27 +14,18 @@ void Window::setApplications(Icon **newApps) {
   this->applications = newApps;
 }
 
-//Icon *initApps() {
-//  Icon *allApps[2][3] = {
-//    { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) },
-//    { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) }
-//  };
-//
-////  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
-////  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
-////
-////  allApps[HOME_D] = homeIcons;
-////  allApps[SWATCH_D] = stopWatch;
-//
-//  return allApps;
-//}
+Window **initWindows() {
+  Window *windows[2];
+
+  window[HOME_D] = generateHomeIcons();
+  window[SWATCH_D] = generateStopwatchIcons();
+
+  return windows;
+}
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
     int newPos = encoder->getPosition();
-    //int numApps = sizeof(icons) / sizeof(icons[0]);
-    //Serial.println(numApps);
-
-    // TODO: change 3 to numapps
+    
     if (*pos != newPos) {
         icons[bidirMod(newPos, 3)]->renderHighlight(&tft);
         icons[bidirMod(*pos, 3)]->removeHighlight(&tft);
@@ -60,6 +51,15 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window) {
 
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window) {
  
+}
+
+void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
+    display->fillRect(0, 0, 128, 40, DEFAULT_BACKGROUND);
+    display->setCursor(20, 30);
+    getTime(rtc, rtcda->timeStamp);
+    display->setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BACKGROUND);
+    display->print(rtcda->timeStamp);      
+    rtcda->timeStamp[0] = '\0'; // clear buffer  
 }
 
 //char timeBuffer[9];

@@ -32,8 +32,9 @@ class Icon {
     uint8_t getDestinationDescriptor();
 };
 
-// add RTC as param
-void drawHomeScreen(ColorDisplay *display);
+Icon **generateHomeIcons();
+
+Icon **generateStopWatchIcons();
 
 void drawStopWatchScreen(ColorDisplay *display);
 

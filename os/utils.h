@@ -6,8 +6,8 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
-#define ECLK 15 // A
-#define EDA 13  // B
+#define ECLK 13 // A
+#define EDA 12  // B
 
 // RTC 
 
