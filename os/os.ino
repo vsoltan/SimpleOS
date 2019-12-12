@@ -10,15 +10,17 @@
 
 ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 RotaryEncoder encoder(EDA, ECLK);
+RTC_Millis rtc;
 
 DisplayInfo *tftInfo;
-
-Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
-Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
-
-Window *window;
-RTC_Millis rtc;
 RTCData *rtcda;
+Window *window;
+
+Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
+Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
+Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
+
+Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
 
 // GLOBALS
 
@@ -30,7 +32,10 @@ void setup() {
     initializeDisplay(&tft);
     initRTC(&rtc);
     rtcda = setRTCData(&rtc);
-    window = new Window(homeIcons);
+//    windowManager = initWindows();
+    window = new Window(allApps[HOME_D]);
+
+    
     tftInfo = createDisplayInfo();
     updateScreenTime(&tft,rtcda, &rtc);
     drawPageIcons(window->getApplications(), &tft);
@@ -53,7 +58,7 @@ uint8_t rotatingDescriptor = HOME_D;
 void loop() {
   encoder.tick();
 
-  navigate(&encoder, homeIcons, &pos);
+  navigate(&encoder, window->getApplications(), &pos);
 
   // every minute update the screen
   if (tftInfo->currPage == HOME_D && currMin != rtc.now().minute()) {
@@ -61,6 +66,7 @@ void loop() {
     currMin = rtc.now().minute();
   }
 
+  // TODO: replace 3 with size of icon array
   rotatingDescriptor = window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor();
 
   byte curr_pwr_state = digitalRead(POWERBUTTON);
@@ -76,7 +82,7 @@ void loop() {
     if (rotatingDescriptor != tftInfo->currPage) {
       tftInfo->currPage = rotatingDescriptor;
       pos = 0;
-      window->setApplications(stopWatch);
+      window->setApplications(allApps[tftInfo->currPage]);
       drawScreen(&tft, tftInfo, window);
     } else {
       updateScreenOnClick(&tft, tftInfo, window);

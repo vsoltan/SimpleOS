@@ -15,12 +15,13 @@ class Icon {
     uint8_t y;
     uint8_t width;
     uint8_t height;
+    uint16_t color;
     const unsigned char *icon;
     const char *label;
     uint8_t destinationDescriptor;
     
   public:
-    Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor);
+    Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor, uint16_t color);
     uint8_t getX();
     uint8_t getY();
     uint8_t getWidth();
@@ -35,6 +36,8 @@ class Icon {
 Icon **generateHomeIcons();
 
 Icon **generateStopWatchIcons();
+
+void homeScreen(ColorDisplay *display);
 
 void drawStopWatchScreen(ColorDisplay *display);
 

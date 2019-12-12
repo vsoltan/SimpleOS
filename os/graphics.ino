@@ -1,7 +1,7 @@
 
 #include "graphics.h"
 
-Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor) {
+Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor, uint16_t color) {
     this->x = x;
     this->y = y; 
     this->width = width;
@@ -9,6 +9,7 @@ Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned c
     this->icon = icon;
     this->label = label;
     this->destinationDescriptor = descriptor;
+    this->color = color;
 }
 
 uint8_t Icon::getX() {
@@ -41,7 +42,7 @@ void Icon::removeHighlight(ColorDisplay *display) {
 }
 
 void Icon::drawIcon(ColorDisplay *display) {
-   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, DEFAULT_ICON_COLOR);
+   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, this->color);
 }
 
 uint8_t Icon::getDestinationDescriptor() {
@@ -49,13 +50,22 @@ uint8_t Icon::getDestinationDescriptor() {
 }
 
 Icon **generateHomeIcons() {
-  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Music", HOME_D) };
+  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
   return homeIcons;
 }
 
 Icon **generateStopwatchIcons() {
-  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D), new Icon(90, 60, 16, 16, heart, "Back", HOME_D) };
+  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
   return stopWatch;
+}
+
+Icon **generateMusicControlIcons() {
+  Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
+  return musicControl;
+}
+
+void drawHomeScreen(ColorDisplay *display) {
+  
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {

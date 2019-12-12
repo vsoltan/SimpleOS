@@ -33,6 +33,10 @@
 #define HOME_D   0
 #define SWATCH_D 1
 
+#define RED   ST7735_RED
+#define BLUE  ST7735_BLUE
+#define GREEN ST7735_GREEN
+
 typedef struct {
   
   byte displayOn;

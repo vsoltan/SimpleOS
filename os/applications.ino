@@ -17,8 +17,8 @@ void Window::setApplications(Icon **newApps) {
 Window **initWindows() {
   Window *windows[2];
 
-  window[HOME_D] = generateHomeIcons();
-  window[SWATCH_D] = generateStopwatchIcons();
+  windows[HOME_D] = new Window(generateHomeIcons());
+  windows[SWATCH_D] = new Window(generateStopwatchIcons());
 
   return windows;
 }
