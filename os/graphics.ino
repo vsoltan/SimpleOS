@@ -49,20 +49,30 @@ uint8_t Icon::getDestinationDescriptor() {
   return this->destinationDescriptor;  
 }
 
-Icon **generateHomeIcons() {
-  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
-  return homeIcons;
-}
+//Icon **generateHomeIcons() {
+//  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
+//  return homeIcons;
+//}
+//
+//Icon **generateStopwatchIcons() {
+//  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
+//  return stopWatch;
+//}
+//
+//Icon **generateMusicControlIcons() {
+//  Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
+//  return musicControl;
+//}
 
-Icon **generateStopwatchIcons() {
-  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
-  return stopWatch;
-}
-
-Icon **generateMusicControlIcons() {
-  Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
-  return musicControl;
-}
+//Icon ***generateAllApps() {
+//  Icon **allApps[3];
+//
+//  allApps[HOME_D] = generateHomeIcons();
+//  allApps[SWATCH_D] = generateStopwatchIcons();
+//  allApps[MUSIC_D] = generateMusicControlIcons();
+//
+//  return allApps;
+//}
 
 void drawHomeScreen(ColorDisplay *display) {
   

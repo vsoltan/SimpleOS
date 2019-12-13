@@ -35,6 +35,7 @@ DisplayInfo *createDisplayInfo() {
 
   dinfo->displayOn = 0;
   dinfo->currPage = HOME_D;
+  dinfo->currIcon = 1;
   dinfo->brightness = 255;
 
   return dinfo;

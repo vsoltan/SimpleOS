@@ -32,6 +32,7 @@
 
 #define HOME_D   0
 #define SWATCH_D 1
+#define MUSIC_D  2
 
 #define RED   ST7735_RED
 #define BLUE  ST7735_BLUE
@@ -42,6 +43,7 @@ typedef struct {
   byte displayOn;
   uint8_t brightness;
   uint8_t currPage;
+  int currIcon;
   
 } DisplayInfo;
 
@@ -58,9 +60,5 @@ void togglePower(DisplayInfo *info);
 void screenSaver();
 
 void setBrightness(uint8_t value);
-
-// TEXT MANIP
-//    tft.getTextBounds(staticTime, 20, 30, &x1, &ya, &w, &h);
-//    Serial.println(w);
 
 #endif

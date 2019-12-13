@@ -14,52 +14,83 @@ void Window::setApplications(Icon **newApps) {
   this->applications = newApps;
 }
 
-Window **initWindows() {
-  Window *windows[2];
-
-  windows[HOME_D] = new Window(generateHomeIcons());
-  windows[SWATCH_D] = new Window(generateStopwatchIcons());
-
-  return windows;
-}
-
-void navigate(RotaryEncoder *encoder, Icon **icons, int *pos) {
+void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
     int newPos = encoder->getPosition();
     
     if (*pos != newPos) {
-        icons[bidirMod(newPos, 3)]->renderHighlight(&tft);
-        icons[bidirMod(*pos, 3)]->removeHighlight(&tft);
+        icons[bidirMod(newPos, size)]->renderHighlight(&tft);
+        icons[bidirMod(*pos, size)]->removeHighlight(&tft);
         *pos = newPos;
     }
 }
 
-void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window) {
+void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
+    display->fillRect(0, 0, 128, 40, DEFAULT_BACKGROUND);
+    display->setCursor(30, 30);
+    getTime(rtc, rtcda->timeStamp);
+    display->setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BACKGROUND);
+    display->print(rtcda->timeStamp);      
+    rtcda->timeStamp[0] = '\0'; // clear buffer  
+}
+
+void updateStopwatch(uint8_t flag) {
+  switch(flag) {
+    case STOP_START:
+      break;
+    case CLEAR:
+      break;
+    default: 
+      break; 
+  }
+}
+
+void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
+  uint8_t cmd = 0;
+  switch(flag) {
+    case STOPPLAY:
+      pTxCharacteristic->setValue(&cmd, 1);
+      pTxCharacteristic->notify();
+      Serial.println("we coo man");
+      break;
+    default: 
+      break; 
+  }
+}
+
+void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc) {
   display->fillScreen(DEFAULT_BACKGROUND);
   drawPageIcons(window->getApplications(), display);
   
   switch(info->currPage) {
-    case HOME_D: 
+    case HOME_D:
+      updateScreenTime(display, rtcda, rtc);
       drawHomeScreen(display);
       break;
     case SWATCH_D: 
       drawStopWatchScreen(display);
+      break;
+    case MUSIC_D: 
+      
       break;
     default:
       break;
   }
 }
 
-void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window) {
- 
-}
-
-void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
-    display->fillRect(0, 0, 128, 40, DEFAULT_BACKGROUND);
-    display->setCursor(20, 30);
-    getTime(rtc, rtcda->timeStamp);
-    display->setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BACKGROUND);
-    display->print(rtcda->timeStamp);      
-    rtcda->timeStamp[0] = '\0'; // clear buffer  
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
+  
+  switch(info->currPage) {
+    case SWATCH_D:
+      updateStopwatch(info->currIcon);
+      break;
+     case MUSIC_D:
+        updateMusic(info->currIcon, pTxCharacteristic, deviceConnected);
+        break;
+     
+    default:
+      break; 
+      
+  }
 }
 
 //char timeBuffer[9];

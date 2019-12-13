@@ -19,6 +19,7 @@ class Icon {
     const unsigned char *icon;
     const char *label;
     uint8_t destinationDescriptor;
+    // boolean for if already pressed or not
     
   public:
     Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor, uint16_t color);
@@ -36,6 +37,8 @@ class Icon {
 Icon **generateHomeIcons();
 
 Icon **generateStopWatchIcons();
+
+Icon ***generateAllApps();
 
 void homeScreen(ColorDisplay *display);
 

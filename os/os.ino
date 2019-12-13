@@ -9,18 +9,28 @@
 // UTILITIES
 
 ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
-RotaryEncoder encoder(EDA, ECLK);
-RTC_Millis rtc;
-
 DisplayInfo *tftInfo;
+
+RotaryEncoder encoder(EDA, ECLK);
+
+RTC_Millis rtc;
 RTCData *rtcda;
+
 Window *window;
 
-Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
+BLEServer *pServer = NULL;
+BLECharacteristic *pTxCharacteristic;
+bool deviceConnected = false;
+//bool oldDeviceConnected = false;
+uint8_t txValue = 0;
+
+Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Weather", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", MUSIC_D, RED) };
 Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
-Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
+Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Previous", MUSIC_D, GREEN), new Icon(55, 60, 16, 16, heart, "Stop/Play", MUSIC_D, GREEN), new Icon(90, 60, 16, 16, heart, "FastForward", HOME_D, GREEN) };
 
 Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
+
+uint8_t numApps[3] = {3, 3, 3};
 
 // GLOBALS
 
@@ -32,14 +42,15 @@ void setup() {
     initializeDisplay(&tft);
     initRTC(&rtc);
     rtcda = setRTCData(&rtc);
-//    windowManager = initWindows();
     window = new Window(allApps[HOME_D]);
-
-    
     tftInfo = createDisplayInfo();
     updateScreenTime(&tft,rtcda, &rtc);
     drawPageIcons(window->getApplications(), &tft);
-    initBLE();
+    initBLE(&pServer, &pTxCharacteristic);
+
+    if (pTxCharacteristic == NULL) {
+      Serial.println("fuck me"); 
+    }
 }
 
 // INITIALIZERS
@@ -58,16 +69,19 @@ uint8_t rotatingDescriptor = HOME_D;
 void loop() {
   encoder.tick();
 
-  navigate(&encoder, window->getApplications(), &pos);
+  // keeps track of 
+  tftInfo->currIcon = pos;
 
-  // every minute update the screen
+  navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
+
+  // only update screen when time is updated
   if (tftInfo->currPage == HOME_D && currMin != rtc.now().minute()) {
     updateScreenTime(&tft, rtcda, &rtc);
     currMin = rtc.now().minute();
   }
 
-  // TODO: replace 3 with size of icon array
-  rotatingDescriptor = window->getApplications()[bidirMod(pos, 3)]->getDestinationDescriptor();
+  // gets the destination descriptor 
+  rotatingDescriptor = window->getApplications()[bidirMod(pos, numApps[tftInfo->currPage])]->getDestinationDescriptor();
 
   byte curr_pwr_state = digitalRead(POWERBUTTON);
   byte curr_nav_state = digitalRead(NAV_BUTTON);
@@ -77,15 +91,17 @@ void loop() {
       lastPowerPress = millis();
   }
 
-  if (curr_nav_state == 0 && prev_nav_state == 1 && millis() >= lastNavPress + DEBOUNCE * 2) {
+  if (curr_nav_state == 0 && prev_nav_state == 1 && millis() >= lastNavPress + DEBOUNCE * 5) {
+
+    Serial.println(deviceConnected);
 
     if (rotatingDescriptor != tftInfo->currPage) {
       tftInfo->currPage = rotatingDescriptor;
       pos = 0;
       window->setApplications(allApps[tftInfo->currPage]);
-      drawScreen(&tft, tftInfo, window);
+      drawScreen(&tft, tftInfo, window, rtcda, &rtc);
     } else {
-      updateScreenOnClick(&tft, tftInfo, window);
+      updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected);
     }
     
     lastPowerPress = millis();

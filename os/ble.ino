@@ -1,24 +1,37 @@
 
 #include "ble.h"
 
-void initBLE() {
-  
-  BLEDevice::init("DumbWatch");
-  BLEServer *pServer = BLEDevice::createServer();
+void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
+ 
+  // Create the BLE Device
+  BLEDevice::init("Valeriy's DumbWatch");
 
-  BLEService *pService = pServer->createService(SERVICE_UUID);
+  // Create the BLE Server
+  *pServer = BLEDevice::createServer();
+  (*pServer)->setCallbacks(new MyServerCallbacks());
 
-  BLECharacteristic *pCharacteristic = pService->createCharacteristic(
-                                         CHARACTERISTIC_UUID,
-                                         BLECharacteristic::PROPERTY_READ |
-                                         BLECharacteristic::PROPERTY_WRITE
-                                       );
+  // Create the BLE Service
+  BLEService *pService = (*pServer)->createService(SERVICE_UUID);
 
-  pCharacteristic->setCallbacks(new MyCallbacks());
+  // Create a BLE Characteristic
+  *pTxCharacteristic = pService->createCharacteristic(
+                    CHARACTERISTIC_UUID_TX,
+                    BLECharacteristic::PROPERTY_NOTIFY
+                  );
+                      
+  (*pTxCharacteristic)->addDescriptor(new BLE2902());
 
-  pCharacteristic->setValue("Hello World");
+  BLECharacteristic * pRxCharacteristic = pService->createCharacteristic(
+                       CHARACTERISTIC_UUID_RX,
+                      BLECharacteristic::PROPERTY_WRITE
+                    );
+
+  pRxCharacteristic->setCallbacks(new MyCallbacks());
+
+  // Start the service
   pService->start();
 
-  BLEAdvertising *pAdvertising = pServer->getAdvertising();
-  pAdvertising->start();
+  // Start advertising
+  (*pServer)->getAdvertising()->start();
+  Serial.println("Waiting a client connection to notify...");
 }
