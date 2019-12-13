@@ -45,15 +45,10 @@ void updateStopwatch(uint8_t flag) {
 }
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
-  uint8_t cmd = 0;
-  switch(flag) {
-    case STOPPLAY:
-      pTxCharacteristic->setValue(&cmd, 1);
-      pTxCharacteristic->notify();
-      Serial.println("we coo man");
-      break;
-    default: 
-      break; 
+ 
+  if (*deviceConnected) {
+     pTxCharacteristic->setValue(&flag, 1);
+     pTxCharacteristic->notify();  
   }
 }
 

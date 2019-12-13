@@ -83,6 +83,8 @@ void drawStopWatchScreen(ColorDisplay *display) {
   display->print("00:00:00");
 }
 
+// CHANGE SO THAT IT TAKES THE SIZE OF THE ARRAY
+
 void drawPageIcons(Icon **appIcons, ColorDisplay *display) {
   for (int i = 0; i < 3; i = i + 1) {
     appIcons[i]->drawIcon(display);

@@ -8,8 +8,6 @@
 #define STOP_START 0
 #define CLEAR 1
 
-#define STOPPLAY 1
-
 class Window {
   
   private:
