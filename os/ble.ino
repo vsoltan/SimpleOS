@@ -8,6 +8,11 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
 
   // Create the BLE Server
   *pServer = BLEDevice::createServer();
+
+  if (*pServer == NULL) {
+    perror("failed to correctly initialize server");
+  }
+  
   (*pServer)->setCallbacks(new MyServerCallbacks());
 
   // Create the BLE Service
@@ -18,6 +23,11 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
                     CHARACTERISTIC_UUID_TX,
                     BLECharacteristic::PROPERTY_NOTIFY
                   );
+                  
+  if (*pTxCharacteristic == NULL) {
+    perror("failed to correctly initialize transmit characteristic");
+  }
+  
                       
   (*pTxCharacteristic)->addDescriptor(new BLE2902());
 
