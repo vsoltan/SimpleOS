@@ -99,9 +99,9 @@ void loop() {
                             tftInfo->currPage = rotatingDescriptor;
                             pos = 0;
                             window->setApplications(allApps[tftInfo->currPage]);
-                            drawScreen(&tft, tftInfo, window, rtcda, &rtc, numApps[tftInfo->currPage]);
+                            drawScreen(&tft, tftInfo, window, rtcda, &rtc, numApps[tftInfo->currPage], appStatus);
                         } else {
-                            updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected, appStatus);
+                            updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, appStatus);
                         }
                     }
                     lastPress = millis();
@@ -125,14 +125,16 @@ void loop() {
 
     // BLE on disconnect
     if (!deviceConnected && oldDeviceConnected) {
+        showBluetoothDisconnected(&tft);
         delay(500);
         // restart advertising
         pServer->startAdvertising();
         oldDeviceConnected = deviceConnected;
     }
 
-    // BLE on renewed connection
+    // BLE on connection
     if (deviceConnected && !oldDeviceConnected) {
+        showBluetoothConnected(&tft);
         oldDeviceConnected = deviceConnected;
     }
 }

@@ -45,12 +45,20 @@ uint8_t getCurrentIconDestination(Window *window, int *pos, DisplayInfo *info, u
 }
 
 void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
-    display->fillRect(0, 0, 128, 40, DEFAULT_BACKGROUND);
+    display->fillRect(0, 15, 128, 40, DEFAULT_BACKGROUND);
     display->setCursor(30, 30);
     getTime(rtc, rtcda->timeStamp);
     display->setTextColor(DEFAULT_TEXT_COLOR, DEFAULT_BACKGROUND);
     display->print(rtcda->timeStamp);
     rtcda->timeStamp[0] = '\0'; // clear buffer
+}
+
+void showBluetoothConnected(ColorDisplay *display) {
+    display->fillCircle(7, 7, 3, WHITE);
+}
+
+void showBluetoothDisconnected(ColorDisplay *display) {
+    display->fillCircle(7, 7, 3, DEFAULT_BACKGROUND);
 }
 
 void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning) {
@@ -74,14 +82,14 @@ void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *devic
     }
 }
 
-void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc, uint8_t numIcons) {
+void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc, uint8_t numIcons, AppStatus *appStatus) {
     display->fillScreen(DEFAULT_BACKGROUND);
     drawPageIcons(window->getApplications(), display, numIcons);
 
     switch(info->currPage) {
         case HOME_D:
             updateScreenTime(display, rtcda, rtc);
-            drawHomeScreen(display, NULL);
+            drawHomeScreen(display, appStatus);
             break;
 
         case SWATCH_D:
@@ -95,14 +103,14 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
      }
 }
 
-void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected, AppStatus *appStatus) {
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
     switch(info->currPage) {
         case SWATCH_D:
             updateStopwatch(info->currIcon, appStatus->stopwatchRunning);
             break;
 
          case MUSIC_D:
-            updateMusic(info->currIcon, pTxCharacteristic, deviceConnected);
+            updateMusic(info->currIcon, pTxCharacteristic, appStatus->bluetoothConnection);
             break;
 
         default:

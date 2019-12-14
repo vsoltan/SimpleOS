@@ -37,6 +37,7 @@
 #define RED   ST7735_RED
 #define BLUE  ST7735_BLUE
 #define GREEN ST7735_GREEN
+#define WHITE ST7735_WHITE
 
 typedef struct {
 

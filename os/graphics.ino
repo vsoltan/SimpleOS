@@ -50,13 +50,13 @@ uint8_t Icon::getDestinationDescriptor() {
 }
 
 void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo) {
-
+    
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {
     // return to stock font
     display->setFont();
-    display->setCursor(45, 20);
+    display->setCursor(35, 20);
     display->print("00:00:00");
 }
 
