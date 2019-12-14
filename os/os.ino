@@ -6,24 +6,36 @@
 
 #define BAUD 115200
 
-// UTILITIES
+// DISPLAY
 
 ColorDisplay tft = Adafruit_ST7735(TFT_CS,  TFT_DC, TFT_RST);
 DisplayInfo *tftInfo;
 
+// ENCODER
+
 RotaryEncoder encoder(EDA, ECLK);
+int pos = 0;
+
+// RTC
 
 RTC_Millis rtc;
 RTCData *rtcda;
 
-Window *window;
+// BUTTONS
 
 Button NAV(HIGH);
+unsigned long lastPress = 0;
+
+// BLE and COMMS
 
 BLEServer *pServer = NULL;
 BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
-//bool oldDeviceConnected = false;
+bool oldDeviceConnected = false;
+
+// WINDOW MANAGEMENT
+
+Window *window;
 
 Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Weather", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", MUSIC_D, RED) };
 Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
@@ -33,26 +45,26 @@ Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
 
 uint8_t numApps[3] = {3, 3, 4};
 
-unsigned long lastNavPress = 0;
-int pos = 0;
-
 void setup() {
     Serial.begin(BAUD);
+
     initializeDisplay(&tft);
+    tftInfo = createDisplayInfo();
+
     initRTC(&rtc);
     rtcda = setRTCData(&rtc);
+
     window = new Window(allApps[HOME_D]);
-    tftInfo = createDisplayInfo();
-    updateScreenTime(&tft,rtcda, &rtc);
-    drawPageIcons(window->getApplications(), &tft);
+
+    updateScreenTime(&tft, rtcda, &rtc);
+    drawPageIcons(window->getApplications(), &tft, numApps[HOME_D]);
+
     initBLE(&pServer, &pTxCharacteristic);
     initNavButton(&NAV);
 }
 
-uint8_t currMin = rtc.now().minute();
+uint8_t currMin = getMinute(&rtc);
 uint8_t rotatingDescriptor = HOME_D;
-
-unsigned long lastPress = 0;
 
 void loop() {
 
@@ -63,18 +75,18 @@ void loop() {
     navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
 
     // gets the destination descriptor
-    rotatingDescriptor = window->getApplications()[bidirMod(pos, numApps[tftInfo->currPage])]->getDestinationDescriptor();
+    rotatingDescriptor = getCurrentIconDestination(window, &pos, tftInfo, numApps);
 
     // only update screen when time is updated
-    if (tftInfo->currPage == HOME_D && currMin != rtc.now().minute()) {
+    if (tftInfo->currPage == HOME_D && currMin != getMinute(&rtc)) {
       updateScreenTime(&tft, rtcda, &rtc);
-      currMin = rtc.now().minute();
+      currMin = getMinute(&rtc);
     }
 
-    byte myButton = NAV.checkButton(NAV_BUTTON);
+    byte navPress = NAV.checkButton(NAV_BUTTON);
 
-    if (myButton) {
-        switch (myButton) {
+    if (navPress) {
+        switch (navPress) {
             case PRESSED:
                 if (millis() > lastPress + DEBOUNCE) {
                     if (!tftInfo->displayOn) {
@@ -84,7 +96,7 @@ void loop() {
                             tftInfo->currPage = rotatingDescriptor;
                             pos = 0;
                             window->setApplications(allApps[tftInfo->currPage]);
-                            drawScreen(&tft, tftInfo, window, rtcda, &rtc);
+                            drawScreen(&tft, tftInfo, window, rtcda, &rtc, numApps[tftInfo->currPage]);
                         } else {
                             updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected);
                         }
@@ -103,8 +115,21 @@ void loop() {
                 lastPress = millis();
                 break;
 
-            default: 
+            default:
                 break;
         }
+    }
+
+    // BLE on disconnect
+    if (!deviceConnected && oldDeviceConnected) {
+        delay(500);
+        // restart advertising
+        pServer->startAdvertising();
+        oldDeviceConnected = deviceConnected;
+    }
+
+    // BLE on renewed connection
+    if (deviceConnected && !oldDeviceConnected) {
+        oldDeviceConnected = deviceConnected;
     }
 }

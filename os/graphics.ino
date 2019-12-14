@@ -3,7 +3,7 @@
 
 Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor, uint16_t color) {
     this->x = x;
-    this->y = y; 
+    this->y = y;
     this->width = width;
     this->height = height;
     this->icon = icon;
@@ -46,7 +46,7 @@ void Icon::drawIcon(ColorDisplay *display) {
 }
 
 uint8_t Icon::getDestinationDescriptor() {
-  return this->destinationDescriptor;  
+  return this->destinationDescriptor;
 }
 
 //Icon **generateHomeIcons() {
@@ -75,7 +75,7 @@ uint8_t Icon::getDestinationDescriptor() {
 //}
 
 void drawHomeScreen(ColorDisplay *display) {
-  
+
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {
@@ -85,8 +85,8 @@ void drawStopWatchScreen(ColorDisplay *display) {
 
 // CHANGE SO THAT IT TAKES THE SIZE OF THE ARRAY
 
-void drawPageIcons(Icon **appIcons, ColorDisplay *display) {
-  for (int i = 0; i < 3; i = i + 1) {
+void drawPageIcons(Icon **appIcons, ColorDisplay *display, uint8_t numIcons) {
+  for (int i = 0; i < numIcons; i = i + 1) {
     appIcons[i]->drawIcon(display);
   }
 }

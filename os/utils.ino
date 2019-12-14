@@ -7,6 +7,14 @@ void initRTC(RTC_Millis *rtc) {
     rtc->begin(DateTime(__DATE__, __TIME__));
 }
 
+uint8_t getMinute(RTC_Millis *rtc) {
+    return rtc->now().minute();
+}
+
+uint8_t getHour(RTC_Millis *rtc) {
+    return rtc->now().hour();
+}
+
 void getTime(RTC_Millis *rtc, char *timeStamp) {
     DateTime now = rtc->now();
     sprintf(timeStamp, "%02hhu:%02hhu", now.hour(), now.minute());

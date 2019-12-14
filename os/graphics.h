@@ -20,7 +20,7 @@ class Icon {
     const char *label;
     uint8_t destinationDescriptor;
     // boolean for if already pressed or not
-    
+
   public:
     Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned char *icon, const char *label, uint8_t descriptor, uint16_t color);
     uint8_t getX();
@@ -56,7 +56,7 @@ const unsigned char PROGMEM heart[] =
   B00111111, B11111100,
   B00011111, B11111000,
   B00001111, B11110000,
-  B00000111, B11100000, 
+  B00000111, B11100000,
   B00000011, B11000000,
   B00000001, B10000000,
   B00000000, B00000000,
@@ -65,7 +65,7 @@ const unsigned char PROGMEM heart[] =
 
 };
 
-void drawPageIcons(Icon **appIcons, ColorDisplay *display);
+void drawPageIcons(Icon **appIcons, ColorDisplay *display, uint8_t numIcons);
 
 void runApp(Icon *app);
 

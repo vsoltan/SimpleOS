@@ -1,6 +1,6 @@
 
-#include "applications.h"
 #include "display.h"
+#include "applications.h"
 
 Window::Window(Icon **applications) {
     this->applications = applications;
@@ -15,6 +15,7 @@ void Window::setApplications(Icon **newApps) {
 }
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
+
     int newPos = encoder->getPosition();
 
     if (*pos != newPos) {
@@ -22,6 +23,10 @@ void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
         icons[bidirMod(*pos, size)]->removeHighlight(&tft);
         *pos = newPos;
     }
+}
+
+uint8_t getCurrentIconDestination(Window *window, int *pos, DisplayInfo *info, uint8_t *numApps) {
+    return window->getApplications()[bidirMod(*pos, numApps[info->currPage])]->getDestinationDescriptor();
 }
 
 void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
@@ -48,12 +53,14 @@ void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *devic
     if (*deviceConnected) {
         pTxCharacteristic->setValue(&flag, 1);
         pTxCharacteristic->notify();
+    } else {
+        perror("not connected to a bluetooth device");
     }
 }
 
-void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc) {
+void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc, uint8_t numIcons) {
     display->fillScreen(DEFAULT_BACKGROUND);
-    drawPageIcons(window->getApplications(), display);
+    drawPageIcons(window->getApplications(), display, numIcons);
 
     switch(info->currPage) {
         case HOME_D:
