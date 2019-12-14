@@ -49,8 +49,20 @@ uint8_t Icon::getDestinationDescriptor() {
     return this->destinationDescriptor;
 }
 
+void showBluetoothConnected(ColorDisplay *display) {
+    display->drawCircle(7, 7, 3, WHITE);
+}
+
+void showBluetoothDisconnected(ColorDisplay *display) {
+    display->drawCircle(7, 7, 3, DEFAULT_BACKGROUND);
+}
+
 void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo) {
-    
+    if (*appInfo->bluetoothConnection) {
+        showBluetoothConnected(display);
+    } else {
+        showBluetoothDisconnected(display);
+    }
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {

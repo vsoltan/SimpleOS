@@ -49,4 +49,8 @@ void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning);
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected);
 
+void showBluetoothConnected(ColorDisplay *display);
+
+void showBluetoothDisconnected(ColorDisplay *display);
+
 #endif

@@ -53,14 +53,7 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
     rtcda->timeStamp[0] = '\0'; // clear buffer
 }
 
-void showBluetoothConnected(ColorDisplay *display) {
-    display->fillCircle(7, 7, 3, WHITE);
-}
-
-void showBluetoothDisconnected(ColorDisplay *display) {
-    display->fillCircle(7, 7, 3, DEFAULT_BACKGROUND);
-}
-
+// TODO implement stopwatch app
 void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning) {
     switch(flag) {
         case STOP_START:
@@ -88,6 +81,7 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
 
     switch(info->currPage) {
         case HOME_D:
+            display->setFont(DEFAULT_FONT);
             updateScreenTime(display, rtcda, rtc);
             drawHomeScreen(display, appStatus);
             break;
