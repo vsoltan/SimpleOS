@@ -33,6 +33,7 @@ Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
 
 uint8_t numApps[3] = {3, 3, 4};
 
+unsigned long lastNavPress = 0;
 int pos = 0;
 
 void setup() {
@@ -51,51 +52,59 @@ void setup() {
 uint8_t currMin = rtc.now().minute();
 uint8_t rotatingDescriptor = HOME_D;
 
+unsigned long lastPress = 0;
+
 void loop() {
 
-  encoder.tick();
+    encoder.tick();
 
-  tftInfo->currIcon = pos;
+    tftInfo->currIcon = pos;
 
-  byte myButton = NAV.checkButton(NAV_BUTTON);
+    navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
 
-  navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
+    // gets the destination descriptor
+    rotatingDescriptor = window->getApplications()[bidirMod(pos, numApps[tftInfo->currPage])]->getDestinationDescriptor();
 
-  // gets the destination descriptor
-  rotatingDescriptor = window->getApplications()[bidirMod(pos, numApps[tftInfo->currPage])]->getDestinationDescriptor();
-
-   // only update screen when time is updated
-  if (tftInfo->currPage == HOME_D && currMin != rtc.now().minute()) {
+    // only update screen when time is updated
+    if (tftInfo->currPage == HOME_D && currMin != rtc.now().minute()) {
       updateScreenTime(&tft, rtcda, &rtc);
       currMin = rtc.now().minute();
-  }
-
-  if (myButton) // if myButton is anything but 0, it is true
-  {
-    switch (myButton)
-    {
-      case PRESSED:
-        if (!tftInfo->displayOn) {
-            togglePower(tftInfo);
-        } else {
-            if (rotatingDescriptor != tftInfo->currPage) {
-                 tftInfo->currPage = rotatingDescriptor;
-                 pos = 0;
-                 window->setApplications(allApps[tftInfo->currPage]);
-                 drawScreen(&tft, tftInfo, window, rtcda, &rtc);
-               } else {
-                 updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected);
-               }
-        }
-        break;
-        
-      case HELD:
-        if (tftInfo->displayOn) {
-            togglePower(tftInfo);
-        }
-        break;
-        
-      default: break;
     }
-  }
+
+    byte myButton = NAV.checkButton(NAV_BUTTON);
+
+    if (myButton) {
+        switch (myButton) {
+            case PRESSED:
+                if (millis() > lastPress + DEBOUNCE) {
+                    if (!tftInfo->displayOn) {
+                        togglePower(tftInfo);
+                    } else {
+                        if (rotatingDescriptor != tftInfo->currPage) {
+                            tftInfo->currPage = rotatingDescriptor;
+                            pos = 0;
+                            window->setApplications(allApps[tftInfo->currPage]);
+                            drawScreen(&tft, tftInfo, window, rtcda, &rtc);
+                        } else {
+                            updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected);
+                        }
+                    }
+                    lastPress = millis();
+                }
+                break;
+
+            case HELD:
+                if (tftInfo->displayOn) {
+                    togglePower(tftInfo);
+                }
+                break;
+
+            case RELEASED:
+                lastPress = millis();
+                break;
+
+            default: 
+                break;
+        }
+    }
 }

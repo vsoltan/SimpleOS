@@ -21,10 +21,10 @@
 
 #define staticTime "12:45"
 
-#define TFT_SCLK 18         
-#define TFT_MOSI 23         
-#define TFT_CS    5        
-#define TFT_RST   2        
+#define TFT_SCLK 18
+#define TFT_MOSI 23
+#define TFT_CS    5
+#define TFT_RST   2
 #define TFT_DC    4
 
 // LCD pin attached to GPIO instead of 3v3 for PWM brightness
@@ -39,12 +39,12 @@
 #define GREEN ST7735_GREEN
 
 typedef struct {
-  
+
   byte displayOn;
   uint8_t brightness;
   uint8_t currPage;
   int currIcon;
-  
+
 } DisplayInfo;
 
 DisplayInfo *createDisplayInfo();
