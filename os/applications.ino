@@ -14,6 +14,21 @@ void Window::setApplications(Icon **newApps) {
     this->applications = newApps;
 }
 
+AppStatus *initAppStatus(bool *deviceConnected) {
+    AppStatus *appInfo = NULL;
+    appInfo = (AppStatus *) malloc(sizeof(AppStatus));
+
+    if (appInfo == NULL) {
+        exit(EXIT_FAILURE);
+    }
+
+    appInfo->stopwatchRunning = 0;
+    appInfo->musicPlaying = 0;
+    appInfo->bluetoothConnection = deviceConnected;
+
+    return appInfo;
+}
+
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
 
     int newPos = encoder->getPosition();
@@ -38,7 +53,7 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
     rtcda->timeStamp[0] = '\0'; // clear buffer
 }
 
-void updateStopwatch(uint8_t flag) {
+void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning) {
     switch(flag) {
         case STOP_START:
             break;
@@ -50,6 +65,7 @@ void updateStopwatch(uint8_t flag) {
 }
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
+    Serial.println(flag);
     if (*deviceConnected) {
         pTxCharacteristic->setValue(&flag, 1);
         pTxCharacteristic->notify();
@@ -65,7 +81,7 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
     switch(info->currPage) {
         case HOME_D:
             updateScreenTime(display, rtcda, rtc);
-            drawHomeScreen(display);
+            drawHomeScreen(display, NULL);
             break;
 
         case SWATCH_D:
@@ -79,11 +95,10 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
      }
 }
 
-void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
-
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected, AppStatus *appStatus) {
     switch(info->currPage) {
         case SWATCH_D:
-            updateStopwatch(info->currIcon);
+            updateStopwatch(info->currIcon, appStatus->stopwatchRunning);
             break;
 
          case MUSIC_D:

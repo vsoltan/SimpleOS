@@ -13,23 +13,23 @@ Icon::Icon(uint8_t x, uint8_t y, uint8_t width, uint8_t height, const unsigned c
 }
 
 uint8_t Icon::getX() {
-  return this->x;
+    return this->x;
 }
 
 uint8_t Icon::getY() {
-  return this->y;
+    return this->y;
 }
 
 uint8_t Icon::getWidth() {
-  return this->width;
+    return this->width;
 }
 
 uint8_t Icon::getHeight() {
-  return this->height;
+    return this->height;
 }
 
 const char *Icon::getLabel() {
-  return this->label;
+    return this->label;
 }
 
 void Icon::renderHighlight(ColorDisplay *display) {
@@ -42,51 +42,26 @@ void Icon::removeHighlight(ColorDisplay *display) {
 }
 
 void Icon::drawIcon(ColorDisplay *display) {
-   display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, this->color);
+    display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, this->color);
 }
 
 uint8_t Icon::getDestinationDescriptor() {
-  return this->destinationDescriptor;
+    return this->destinationDescriptor;
 }
 
-//Icon **generateHomeIcons() {
-//  Icon *homeIcons[3] = { new Icon(20, 60, 16, 16, heart, "Health", HOME_D, RED), new Icon(55, 60, 16, 16, heart, "Stopwatch", SWATCH_D, RED), new Icon(90, 60, 16, 16, heart, "Music", HOME_D, RED) };
-//  return homeIcons;
-//}
-//
-//Icon **generateStopwatchIcons() {
-//  Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, BLUE), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, BLUE), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, BLUE) };
-//  return stopWatch;
-//}
-//
-//Icon **generateMusicControlIcons() {
-//  Icon *musicControl[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, GREEN), new Icon(55, 60, 16, 16, heart, "Clear", SWATCH_D, GREEN), new Icon(90, 60, 16, 16, heart, "Back", HOME_D, GREEN) };
-//  return musicControl;
-//}
-
-//Icon ***generateAllApps() {
-//  Icon **allApps[3];
-//
-//  allApps[HOME_D] = generateHomeIcons();
-//  allApps[SWATCH_D] = generateStopwatchIcons();
-//  allApps[MUSIC_D] = generateMusicControlIcons();
-//
-//  return allApps;
-//}
-
-void drawHomeScreen(ColorDisplay *display) {
+void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo) {
 
 }
 
 void drawStopWatchScreen(ColorDisplay *display) {
-  display->setCursor(0, 20);
-  display->print("00:00:00");
+    // return to stock font
+    display->setFont();
+    display->setCursor(45, 20);
+    display->print("00:00:00");
 }
 
-// CHANGE SO THAT IT TAKES THE SIZE OF THE ARRAY
-
 void drawPageIcons(Icon **appIcons, ColorDisplay *display, uint8_t numIcons) {
-  for (int i = 0; i < numIcons; i = i + 1) {
-    appIcons[i]->drawIcon(display);
-  }
+    for (int i = 0; i < numIcons; i = i + 1) {
+        appIcons[i]->drawIcon(display);
+    }
 }

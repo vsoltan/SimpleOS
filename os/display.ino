@@ -30,7 +30,7 @@ DisplayInfo *createDisplayInfo() {
     dinfo = (DisplayInfo *) malloc(sizeof(DisplayInfo));
 
     if (dinfo == NULL) {
-    exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     dinfo->displayOn = 1;

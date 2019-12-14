@@ -7,3 +7,4 @@ install the following libraries:
 - Adafruit GFX Library
 - RTCLib by NeiroN
 - RotaryEncoder by Matthias Hertel
+-Improved Button Library by Andrew Mascolo

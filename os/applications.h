@@ -22,17 +22,30 @@ class Window {
 
 };
 
+typedef struct {
+    byte stopwatchRunning;
+    byte musicPlaying;
+    bool *bluetoothConnection;
+} AppStatus;
+
+AppStatus *initAppStatus(bool *deviceConnected);
+
+// NAVIGATION
+
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size);
 uint8_t getCurrentIconDestination(Window *window, int *pos, DisplayInfo *info, uint8_t *numApps);
 
-void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected);
-
-void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc);
-
+// RENDERING
 
 void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCData *rtcda, RTC_Millis *rtc, uint8_t numIcons);
 
-void updateStopwatch(uint8_t flag);
+// SCREEN UPDATES
+
+void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc);
+
+void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, bool *deviceConnected, AppStatus *appStatus);
+
+void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning);
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected);
 

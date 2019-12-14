@@ -33,7 +33,7 @@ BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 
-// WINDOW MANAGEMENT
+// WINDOW | APP MANAGEMENT
 
 Window *window;
 
@@ -42,8 +42,9 @@ Icon *stopWatch[3] = { new Icon(20, 60, 16, 16, heart, "Start/Stop", SWATCH_D, B
 Icon *musicControl[4] = { new Icon(20, 60, 16, 16, heart, "Previous", MUSIC_D, GREEN), new Icon(55, 60, 16, 16, heart, "Stop/Play", MUSIC_D, GREEN), new Icon(90, 60, 16, 16, heart, "FastForward", MUSIC_D, GREEN), new Icon(55, 95, 16, 16, heart, "Stop/Play", HOME_D, RED) };
 
 Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
-
 uint8_t numApps[3] = {3, 3, 4};
+
+AppStatus *appStatus;
 
 void setup() {
     Serial.begin(BAUD);
@@ -61,6 +62,8 @@ void setup() {
 
     initBLE(&pServer, &pTxCharacteristic);
     initNavButton(&NAV);
+
+    appStatus = initAppStatus(&deviceConnected);
 }
 
 uint8_t currMin = getMinute(&rtc);
@@ -98,7 +101,7 @@ void loop() {
                             window->setApplications(allApps[tftInfo->currPage]);
                             drawScreen(&tft, tftInfo, window, rtcda, &rtc, numApps[tftInfo->currPage]);
                         } else {
-                            updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected);
+                            updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, &deviceConnected, appStatus);
                         }
                     }
                     lastPress = millis();
