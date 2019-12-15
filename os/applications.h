@@ -22,13 +22,8 @@ class Window {
 
 };
 
-typedef struct {
-    byte stopwatchRunning;
-    byte musicPlaying;
-    bool *bluetoothConnection;
-} AppStatus;
-
-AppStatus *initAppStatus(bool *deviceConnected);
+AppStatus *initAppStatus(bool *deviceConnected, bool *musicPlaying);
+void showBluetoothStatus(ColorDisplay *display, AppStatus *appStatus);
 
 // NAVIGATION
 
@@ -47,7 +42,7 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
 
 void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning);
 
-void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected);
+void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus, ColorDisplay *display);
 
 void showBluetoothConnected(ColorDisplay *display);
 

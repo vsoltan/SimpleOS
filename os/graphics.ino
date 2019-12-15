@@ -42,7 +42,11 @@ void Icon::removeHighlight(ColorDisplay *display) {
 }
 
 void Icon::drawIcon(ColorDisplay *display) {
-    display->drawBitmap(this->x, this->y, this->icon, this->width, this->height, this->color);
+    display->drawXBitmap(this->x, this->y, this->icon, this->width, this->height, this->color);
+}
+
+void Icon::setIcon(const unsigned char *newIcon) {
+    this->icon = newIcon;
 }
 
 uint8_t Icon::getDestinationDescriptor() {
@@ -58,21 +62,26 @@ void showBluetoothDisconnected(ColorDisplay *display) {
 }
 
 void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo) {
-    if (*appInfo->bluetoothConnection) {
-        showBluetoothConnected(display);
-    } else {
-        showBluetoothDisconnected(display);
-    }
+    showBluetoothStatus(display, appStatus);
 }
 
-void drawStopWatchScreen(ColorDisplay *display) {
+void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo) {
+    showBluetoothStatus(display, appStatus);
     // return to stock font
     display->setFont();
     display->setCursor(35, 20);
     display->print("00:00:00");
 }
 
+void drawMusicScreen(ColorDisplay *display, AppStatus *appInfo) {
+    showBluetoothStatus(display, appStatus);
+    display->setFont(DEFAULT_FONT);
+    display->setCursor(35, 20);
+    display->print("Music");
+}
+
 void drawPageIcons(Icon **appIcons, ColorDisplay *display, uint8_t numIcons) {
+    Serial.println(sizeof(appIcons) / sizeof(appIcons[0]));
     for (int i = 0; i < numIcons; i = i + 1) {
         appIcons[i]->drawIcon(display);
     }

@@ -14,7 +14,7 @@ void Window::setApplications(Icon **newApps) {
     this->applications = newApps;
 }
 
-AppStatus *initAppStatus(bool *deviceConnected) {
+AppStatus *initAppStatus(bool *deviceConnected, bool *musicPlaying) {
     AppStatus *appInfo = NULL;
     appInfo = (AppStatus *) malloc(sizeof(AppStatus));
 
@@ -23,10 +23,18 @@ AppStatus *initAppStatus(bool *deviceConnected) {
     }
 
     appInfo->stopwatchRunning = 0;
-    appInfo->musicPlaying = 0;
+    appInfo->musicPlaying = musicPlaying;
     appInfo->bluetoothConnection = deviceConnected;
 
     return appInfo;
+}
+
+void showBluetoothStatus(ColorDisplay *display, AppStatus *appStatus) {
+    if (*appStatus->bluetoothConnection) {
+        showBluetoothConnected(display);
+    } else {
+        showBluetoothDisconnected(display);
+    }  
 }
 
 void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
@@ -65,11 +73,24 @@ void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning) {
     }
 }
 
-void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, bool *deviceConnected) {
-    Serial.println(flag);
-    if (*deviceConnected) {
+void updateMusic(uint8_t flag, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus, ColorDisplay *display) {
+    
+    if (*appStatus->bluetoothConnection) {
+        // play or pause pressed
+        if (flag == 1) {
+          if (*appStatus->musicPlaying) {
+            window->getApplications()[flag]->setIcon(play_bits);         
+          } else {
+            window->getApplications()[flag]->setIcon(pause_bits);         
+          }
+          *appStatus->musicPlaying = !(*appStatus->musicPlaying);
+        }
         pTxCharacteristic->setValue(&flag, 1);
         pTxCharacteristic->notify();
+
+        display->fillRect(55, 55, 24, 24, DEFAULT_BACKGROUND);
+        drawPageIcons(window->getApplications(), display, 4);
+        
     } else {
         perror("not connected to a bluetooth device");
     }
@@ -87,10 +108,11 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
             break;
 
         case SWATCH_D:
-            drawStopWatchScreen(display);
+            drawStopWatchScreen(display, appStatus);
             break;
 
         case MUSIC_D:
+            drawMusicScreen(display, appStatus);
             break;
         default:
             break;
@@ -104,7 +126,7 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
             break;
 
          case MUSIC_D:
-            updateMusic(info->currIcon, pTxCharacteristic, appStatus->bluetoothConnection);
+            updateMusic(info->currIcon, window, pTxCharacteristic, appStatus, display);
             break;
 
         default:

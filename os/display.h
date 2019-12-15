@@ -34,10 +34,13 @@
 #define SWATCH_D 1
 #define MUSIC_D  2
 
-#define RED   ST7735_RED
-#define BLUE  ST7735_BLUE
-#define GREEN ST7735_GREEN
-#define WHITE ST7735_WHITE
+#define RED    ST7735_RED
+#define BLUE   ST7735_BLUE
+#define GREEN  ST7735_GREEN
+#define WHITE  ST7735_WHITE
+#define CYAN   ST7735_CYAN
+#define ORANGE 0xFBEC
+
 
 typedef struct {
 

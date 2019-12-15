@@ -12,6 +12,7 @@
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 
 extern bool deviceConnected;
+extern bool musicPlaying;
 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -32,11 +33,16 @@ class MyCallbacks: public BLECharacteristicCallbacks {
       if (rxValue.length() > 0) {
         Serial.println("*********");
         Serial.print("Received Value: ");
+        
         for (int i = 0; i < rxValue.length(); i++)
           Serial.print(rxValue[i]);
 
-        Serial.println();
-        Serial.println("*********");
+//        logic for music code 
+//        if (playing code ) {
+//            musicPlaying = true;
+//        } else {
+//            musicPlaying = false;
+//        }
       }
     }
 };
