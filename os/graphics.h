@@ -38,10 +38,11 @@ class Icon {
 typedef struct {
   
     byte stopwatchRunning;
-    bool *musicPlaying;
+    bool musicPlaying;
     bool *bluetoothConnection;
     bool stopWatchRunning;
     unsigned long stopWatchStartTime;
+    unsigned long stopWatchPauseTime;
     unsigned long stopWatchCurrTime; 
 
 } AppStatus;

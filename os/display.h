@@ -18,6 +18,8 @@
 
 #define DEFAULT_FONT &FreeMonoBold12pt7b
 #define FONT_SIZE 12
+#define TIME_CENTER 31
+#define SWATCH_CENTER 40
 
 #define staticTime "12:45"
 

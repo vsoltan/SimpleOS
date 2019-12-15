@@ -69,14 +69,15 @@ void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo) {
     showBluetoothStatus(display, appStatus);
     // return to stock font
     display->setFont();
-    display->setCursor(40, 20);
+    display->setTextSize(2);
+    display->setCursor(16, 20);
     display->print("00:00:00");
 }
 
 void drawMusicScreen(ColorDisplay *display, AppStatus *appInfo) {
     showBluetoothStatus(display, appStatus);
     display->setFont(DEFAULT_FONT);
-    display->setCursor(35, 20);
+    display->setCursor(30, 20);
     display->print("Music");
 }
 

@@ -33,8 +33,6 @@ BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 
-bool musicPlaying = false;
-
 // WINDOW | APP MANAGEMENT
 
 Window *window;
@@ -65,7 +63,7 @@ void setup() {
     initBLE(&pServer, &pTxCharacteristic);
     initNavButton(&NAV);
 
-    appStatus = initAppStatus(&deviceConnected, &musicPlaying);
+    appStatus = initAppStatus(&deviceConnected);
 }
 
 uint8_t currMin = getMinute(&rtc);
@@ -132,14 +130,6 @@ void loop() {
         }
     }
 
-
-    // detect changes in music playback
-    if (musicPlaying) {
-      musicControl[1]->setIcon(pause_bits);
-    } else {
-      musicControl[1]->setIcon(play_bits);
-    }
-
     // BLE on disconnect
     if (!deviceConnected && oldDeviceConnected) {
         showBluetoothDisconnected(&tft);
@@ -151,7 +141,6 @@ void loop() {
 
     // BLE on connection
     if (deviceConnected && !oldDeviceConnected) {
-//        tone(BUZZER, 420, 250);
         showBluetoothConnected(&tft);
         oldDeviceConnected = deviceConnected;
     }
