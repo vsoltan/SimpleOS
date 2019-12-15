@@ -70,7 +70,7 @@ void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo) {
     // return to stock font
     display->setFont();
     display->setTextSize(2);
-    display->setCursor(16, 20);
+    display->setCursor(SWATCH_CENTER, 20);
     display->print("00:00:00");
 }
 

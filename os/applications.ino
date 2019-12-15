@@ -103,7 +103,7 @@ void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display) 
             appStatus->stopWatchCurrTime = 0;
             appStatus->stopWatchRunning = false;
             display->setTextSize(2);
-            display->setCursor(20, 20);
+            display->setCursor(SWATCH_CENTER, 20);
             display->setTextColor(WHITE, DEFAULT_BACKGROUND);
             display->print("00:00:00");
             break;
