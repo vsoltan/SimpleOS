@@ -88,6 +88,13 @@ void loop() {
       currMin = getMinute(&rtc);
     }
 
+    if (appStatus->stopWatchRunning) {
+        appStatus->stopWatchCurrTime = millis() - appStatus->stopWatchStartTime;
+        if (tftInfo->currPage == SWATCH_D) {
+          runStopWatch(&tft, appStatus);
+        }
+    }
+
     byte navPress = NAV.checkButton(NAV_BUTTON);
 
     if (navPress) {
@@ -144,6 +151,7 @@ void loop() {
 
     // BLE on connection
     if (deviceConnected && !oldDeviceConnected) {
+//        tone(BUZZER, 420, 250);
         showBluetoothConnected(&tft);
         oldDeviceConnected = deviceConnected;
     }

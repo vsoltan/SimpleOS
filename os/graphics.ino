@@ -69,7 +69,7 @@ void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo) {
     showBluetoothStatus(display, appStatus);
     // return to stock font
     display->setFont();
-    display->setCursor(35, 20);
+    display->setCursor(40, 20);
     display->print("00:00:00");
 }
 

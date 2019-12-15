@@ -40,12 +40,15 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc);
 
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus);
 
-void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning);
+void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display);
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus, ColorDisplay *display);
 
 void showBluetoothConnected(ColorDisplay *display);
 
 void showBluetoothDisconnected(ColorDisplay *display);
+
+void runStopWatch(ColorDisplay *display, AppStatus *appStatus);
+void displayFormatedStopwatch(ColorDisplay *display, uint8_t t);
 
 #endif

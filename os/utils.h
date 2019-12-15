@@ -7,8 +7,11 @@
 #define UTILS_H_
 
 // ENCODER PINS
+
 #define ECLK 13 // A
 #define EDA 12  // B
+
+#define BUZZER 17
 
 typedef struct {
   char timeStamp[9];

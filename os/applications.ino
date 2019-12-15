@@ -25,6 +25,9 @@ AppStatus *initAppStatus(bool *deviceConnected, bool *musicPlaying) {
     appInfo->stopwatchRunning = 0;
     appInfo->musicPlaying = musicPlaying;
     appInfo->bluetoothConnection = deviceConnected;
+    appInfo->stopWatchStartTime = 0;
+    appInfo->stopWatchCurrTime = 0;
+    appInfo->stopWatchRunning = false;
 
     return appInfo;
 }
@@ -48,6 +51,27 @@ void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
     }
 }
 
+void runStopWatch(ColorDisplay *display, AppStatus *appStatus) {
+    display->setCursor(40, 20);
+    display->setTextColor(WHITE, DEFAULT_BACKGROUND);
+    displayFormatedStopwatch(display, appStatus->stopWatchCurrTime);
+}
+
+void displayFormatedStopwatch(ColorDisplay *display, uint8_t t) {
+    int minutes = (t / 1000) / 60;
+    int seconds = (t / 1000) % 60;
+    int milliseconds = (t % 1000) / 10;
+
+    display->print(minutes / 10);
+    display->print(minutes % 10);
+    display->print(":");
+    display->print(seconds / 10);
+    display->print(seconds % 10);
+    display->print(":");
+    display->print(milliseconds / 10);
+    display->print(milliseconds % 10);
+}
+
 uint8_t getCurrentIconDestination(Window *window, int *pos, DisplayInfo *info, uint8_t *numApps) {
     return window->getApplications()[bidirMod(*pos, numApps[info->currPage])]->getDestinationDescriptor();
 }
@@ -62,11 +86,21 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
 }
 
 // TODO implement stopwatch app
-void updateStopwatch(uint8_t flag, uint8_t stopwatchRunning) {
+void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display) {
     switch(flag) {
         case STOP_START:
+            if (!appStatus->stopWatchRunning) {
+                appStatus->stopWatchStartTime = millis();
+                appStatus->stopWatchRunning = true;
+            } else {
+                appStatus->stopWatchRunning = false;
+            }
             break;
         case CLEAR:
+            appStatus->stopWatchRunning = false;
+            display->setCursor(40, 20);
+            display->setTextColor(WHITE, DEFAULT_BACKGROUND);
+            display->print("00:00:00"); 
             break;
         default:
             break;
@@ -122,7 +156,7 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
     switch(info->currPage) {
         case SWATCH_D:
-            updateStopwatch(info->currIcon, appStatus->stopwatchRunning);
+            updateStopwatch(info->currIcon, appStatus, display);
             break;
 
          case MUSIC_D:
@@ -133,21 +167,3 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
             break;
     }
 }
-
-//char timeBuffer[9];
-//
-//void runStopWatchApp(ColorDisplay *display) {}
-//
-//void display_MSm(ColorDisplay *display, unsigned long t, char *timeBuffer) {
-//    int minutes = (t / 1000) / 60;
-//    int seconds = (t / 1000) % 60;
-//    int milliseconds = (t % 1000) / 10;
-
-//    display->print(minutes / 10);
-//    display->print(minutes % 10);
-//    display->print(":");
-//    display->print(seconds / 10);
-//    display->print(seconds % 10);
-//    display->print(":");
-//    display->print(milliseconds / 10);
-//    display->print(milliseconds % 10);
