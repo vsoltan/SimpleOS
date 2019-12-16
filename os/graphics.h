@@ -1,6 +1,7 @@
 
 #include "display.h"
 #include "utils.h"
+#include <Arduino_JSON.h>
 
 
 #ifndef GRAPHICS_H_
@@ -44,6 +45,7 @@ typedef struct {
     unsigned long stopWatchStartTime;
     unsigned long stopWatchPauseTime;
     unsigned long stopWatchCurrTime; 
+    JSONVar *weatherObj;
 
 } AppStatus;
 
@@ -53,11 +55,15 @@ Icon **generateStopWatchIcons();
 
 Icon ***generateAllApps();
 
-void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo);
+void drawHomeScreen(ColorDisplay *display, AppStatus *appStatus);
 
-void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo);
+void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus);
 
-void drawMusicScreen(ColorDisplay *display, AppStatus *appInfo);
+void drawStopWatchScreen(ColorDisplay *display, AppStatus *appStatus);
+
+void displayFormatedStopwatch(ColorDisplay *display, unsigned long t);
+
+void drawMusicScreen(ColorDisplay *display, AppStatus *appStatus);
 
 void drawPageIcons(Icon **appIcons, ColorDisplay *display, uint8_t numIcons);
 

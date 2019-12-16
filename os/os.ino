@@ -33,16 +33,19 @@ BLECharacteristic *pTxCharacteristic;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 
+JSONVar weatherObj;
+
 // WINDOW | APP MANAGEMENT
 
 Window *window;
 
-Icon *homeIcons[3] = { new Icon(14, 60, 24, 24, weather_bits, "Weather", HOME_D, CYAN), new Icon(52, 60, 24, 24, swatch_bits, "Stopwatch", SWATCH_D, ORANGE), new Icon(90, 60, 24, 24, music_bits, "Music", MUSIC_D, ST7735_YELLOW) };
+Icon *homeIcons[3] = { new Icon(14, 60, 24, 24, weather_bits, "Weather", WEATHER_D, CYAN), new Icon(52, 60, 24, 24, swatch_bits, "Stopwatch", SWATCH_D, ORANGE), new Icon(90, 60, 24, 24, music_bits, "Music", MUSIC_D, ST7735_YELLOW) };
 Icon *stopWatch[3] = { new Icon(26, 60, 24, 24, play_bits, "Start/Stop", SWATCH_D, BLUE), new Icon(76, 60, 16, 16, heart, "Clear", SWATCH_D, ORANGE), new Icon(56, 95, 16, 16, back_bits, "Back", HOME_D, RED) };
 Icon *musicControl[4] = { new Icon(20, 60, 16, 16, prev_track_bits, "Previous", MUSIC_D, GREEN), new Icon(55, 55, 24, 24, play_bits, "Stop/Play", MUSIC_D, GREEN), new Icon(90, 60, 16, 16, next_track_bits, "FastForward", MUSIC_D, GREEN), new Icon(55, 95, 16, 16, back_bits, "Stop/Play", HOME_D, RED) };
+Icon *weatherIcons[1] = { new Icon(56, 95, 16, 16, back_bits, "Back", HOME_D, RED)};
 
-Icon **allApps[3] = {homeIcons, stopWatch, musicControl};
-uint8_t numApps[3] = {3, 3, 4};
+Icon **allApps[4] = {homeIcons, stopWatch, musicControl, weatherIcons};
+uint8_t numApps[4] = {3, 3, 4, 1};
 
 AppStatus *appStatus;
 
@@ -63,7 +66,7 @@ void setup() {
     initBLE(&pServer, &pTxCharacteristic);
     initNavButton(&NAV);
 
-    appStatus = initAppStatus(&deviceConnected);
+    appStatus = initAppStatus(&deviceConnected, &weatherObj);
 }
 
 uint8_t currMin = getMinute(&rtc);
@@ -73,9 +76,9 @@ void loop() {
 
     encoder.tick();
 
-    tftInfo->currIcon = pos;
-
     navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
+
+    tftInfo->currIcon = bidirMod(pos, numApps[tftInfo->currPage]);
 
     // gets the destination descriptor
     rotatingDescriptor = getCurrentIconDestination(window, &pos, tftInfo, numApps);
@@ -84,13 +87,6 @@ void loop() {
     if (tftInfo->currPage == HOME_D && currMin != getMinute(&rtc)) {
       updateScreenTime(&tft, rtcda, &rtc);
       currMin = getMinute(&rtc);
-    }
-
-    if (appStatus->stopWatchRunning) {
-        appStatus->stopWatchCurrTime = millis() - appStatus->stopWatchStartTime;
-        if (tftInfo->currPage == SWATCH_D) {
-          runStopWatch(&tft, appStatus);
-        }
     }
 
     byte navPress = NAV.checkButton(NAV_BUTTON);
@@ -127,6 +123,13 @@ void loop() {
 
             default:
                 break;
+        }
+    }
+
+    if (appStatus->stopWatchRunning) {
+        appStatus->stopWatchCurrTime = millis() - appStatus->stopWatchStartTime;
+        if (tftInfo->currPage == SWATCH_D) {
+          runStopWatch(&tft, appStatus);
         }
     }
 

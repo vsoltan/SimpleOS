@@ -22,7 +22,7 @@ class Window {
 
 };
 
-AppStatus *initAppStatus(bool *deviceConnected);
+AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj);
 
 void showBluetoothStatus(ColorDisplay *display, AppStatus *appStatus);
 
@@ -47,8 +47,6 @@ void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, AppStatus *
 void runStopWatch(ColorDisplay *display, AppStatus *appStatus);
 
 void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display);
-
-void displayFormatedStopwatch(ColorDisplay *display, unsigned long t);
 
 void showBluetoothConnected(ColorDisplay *display);
 
