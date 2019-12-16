@@ -32,9 +32,10 @@
 // LCD pin attached to GPIO instead of 3v3 for PWM brightness
 #define LCD      16
 
-#define HOME_D   0
-#define SWATCH_D 1
-#define MUSIC_D  2
+#define HOME_D    0
+#define SWATCH_D  1
+#define MUSIC_D   2
+#define WEATHER_D 3
 
 #define RED    ST7735_RED
 #define BLUE   ST7735_BLUE

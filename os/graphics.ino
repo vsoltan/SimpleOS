@@ -61,20 +61,59 @@ void showBluetoothDisconnected(ColorDisplay *display) {
     display->drawCircle(7, 7, 3, DEFAULT_BACKGROUND);
 }
 
-void drawHomeScreen(ColorDisplay *display, AppStatus *appInfo) {
+void drawHomeScreen(ColorDisplay *display, AppStatus *appStatus) {
     showBluetoothStatus(display, appStatus);
 }
 
-void drawStopWatchScreen(ColorDisplay *display, AppStatus *appInfo) {
+void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
+    if (appStatus->weatherObj != NULL) {
+        display->setFont();
+        
+        display->setCursor(20, 20);
+        display->print((*appStatus->weatherObj)["weather"][0]["main"]);
+
+        display->setCursor(20, 30);
+        display->print("temp: ");
+        display->print(weatherObj["main"]["temp"]);
+
+        display->setCursor(20, 40);
+        display->print("temp-max: ");
+        display->print(weatherObj["main"]["temp_max"]);
+
+        display->setCursor(20, 50);
+        display->print("temp-min: ");
+        display->println(weatherObj["main"]["temp_min"]);
+    }
+}
+
+void displayFormatedStopwatch(ColorDisplay *display, unsigned long t) {
+    int minutes = (t / 1000) / 60;
+    int seconds = (t / 1000) % 60;
+    int milliseconds = (t % 1000) / 10;
+
+    display->print(minutes / 10);
+    display->print(minutes % 10);
+    display->print(":");
+    display->print(seconds / 10);
+    display->print(seconds % 10);
+    display->print(":");
+    display->print(milliseconds / 10);
+    display->print(milliseconds % 10);
+}
+
+void drawStopWatchScreen(ColorDisplay *display, AppStatus *appStatus) {
     showBluetoothStatus(display, appStatus);
-    // return to stock font
     display->setFont();
     display->setTextSize(2);
     display->setCursor(SWATCH_CENTER, 20);
-    display->print("00:00:00");
+    if (appStatus->stopWatchCurrTime != 0) {
+      displayFormatedStopwatch(display, appStatus->stopWatchCurrTime);
+    } else {
+      display->print("00:00:00");
+    }
 }
 
-void drawMusicScreen(ColorDisplay *display, AppStatus *appInfo) {
+void drawMusicScreen(ColorDisplay *display, AppStatus *appStatus) {
     showBluetoothStatus(display, appStatus);
     display->setFont(DEFAULT_FONT);
     display->setCursor(30, 20);

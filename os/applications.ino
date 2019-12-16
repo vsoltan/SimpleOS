@@ -14,7 +14,7 @@ void Window::setApplications(Icon **newApps) {
     this->applications = newApps;
 }
 
-AppStatus *initAppStatus(bool *deviceConnected) {
+AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj) {
     AppStatus *appInfo = NULL;
     appInfo = (AppStatus *) malloc(sizeof(AppStatus));
 
@@ -29,6 +29,7 @@ AppStatus *initAppStatus(bool *deviceConnected) {
     appInfo->stopWatchCurrTime = 0;
     appInfo->stopWatchPauseTime = 0;
     appInfo->stopWatchRunning = false;
+    appInfo->weatherObj = weatherObj;
 
     return appInfo;
 }
@@ -48,8 +49,9 @@ void navigate(RotaryEncoder *encoder, Icon **icons, int *pos, uint8_t size) {
     if (*pos != newPos) {
         icons[bidirMod(newPos, size)]->renderHighlight(&tft);
         icons[bidirMod(*pos, size)]->removeHighlight(&tft);
-        *pos = newPos;
     }
+
+    *pos = newPos;
 }
 
 void runStopWatch(ColorDisplay *display, AppStatus *appStatus) {
@@ -57,21 +59,6 @@ void runStopWatch(ColorDisplay *display, AppStatus *appStatus) {
     display->setCursor(16, 20);
     display->setTextColor(WHITE, DEFAULT_BACKGROUND);
     displayFormatedStopwatch(display, appStatus->stopWatchCurrTime);
-}
-
-void displayFormatedStopwatch(ColorDisplay *display, unsigned long t) {
-    int minutes = (t / 1000) / 60;
-    int seconds = (t / 1000) % 60;
-    int milliseconds = (t % 1000) / 10;
-
-    display->print(minutes / 10);
-    display->print(minutes % 10);
-    display->print(":");
-    display->print(seconds / 10);
-    display->print(seconds % 10);
-    display->print(":");
-    display->print(milliseconds / 10);
-    display->print(milliseconds % 10);
 }
 
 uint8_t getCurrentIconDestination(Window *window, int *pos, DisplayInfo *info, uint8_t *numApps) {
@@ -89,15 +76,20 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
 
 // TODO implement stopwatch app
 void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display) {
+    Serial.println(flag);
     switch(flag) {
         case STOP_START:
+            Serial.println("why are you doing this");
             if (appStatus->stopWatchRunning) {
+                Serial.println("why are you doing this");
                 appStatus->stopWatchRunning = false;
                 appStatus->stopWatchStartTime = millis();
             } else {
+                Serial.println("why are you doing this 2");
                 appStatus->stopWatchRunning = true;
                 appStatus->stopWatchStartTime = millis() - appStatus->stopWatchCurrTime;
             }
+            Serial.println("end");
             break;
         case CLEAR:
             appStatus->stopWatchCurrTime = 0;
@@ -154,14 +146,24 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
         case MUSIC_D:
             drawMusicScreen(display, appStatus);
             break;
+
+        case WEATHER_D:
+            // won't have weather data without connection
+            if (appStatus->bluetoothConnection) {
+              drawWeatherScreen(display, appStatus);  
+            }
+            break;
+        
         default:
             break;
      }
 }
 
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
+    Serial.println("updating...");
     switch(info->currPage) {
         case SWATCH_D:
+            Serial.println("there");
             updateStopwatch(info->currIcon, appStatus, display);
             break;
 
