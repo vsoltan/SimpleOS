@@ -40,6 +40,11 @@ RTCData *setRTCData(RTC_Millis *rtc) {
   return rtcda;
 }
 
+void initNavButton(Button *button) {
+  pinMode(NAV_BUTTON, INPUT_PULLUP);
+  button->SetStateAndTime(LOW, 1000);
+}
+
 // ENCODER
 
 uint8_t bidirMod(int8_t n, uint8_t m) {

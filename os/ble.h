@@ -31,7 +31,6 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
-      Serial.println("HELLO");
       newWeatherData = true;
       weatherDataReceived = false;
       std::string rxValue = pCharacteristic->getValue();
@@ -56,7 +55,6 @@ class MyCallbacks: public BLECharacteristicCallbacks {
       }
     }
 };
-
 
 void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic);
 

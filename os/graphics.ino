@@ -72,6 +72,7 @@ void drawHomeScreen(ColorDisplay *display, AppStatus *appStatus) {
 void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
     display->setFont();
     display->setTextColor(WHITE, DEFAULT_BACKGROUND);
+    
     if (*appStatus->bluetoothConnection) {
       if (*appStatus->weatherDataReceived) {
         display->fillRect(0, 0, 128, 95, DEFAULT_BACKGROUND);
@@ -93,13 +94,14 @@ void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
 ////              appStatus->icon = snow_bits; 
 //              break;
           case 8:
-              appStatus->weatherIcon = sunny_bits; 
+              appStatus->weatherIcon = rain_bits;
+              appStatus->iconColor = BLUE; 
               break;
           default:
               break; 
         }
 
-        display->drawXBitmap(0, 0, appStatus->weatherIcon, 60, 60, YELLOW);
+        display->drawXBitmap(0, 0, appStatus->weatherIcon, 60, 60, appStatus->iconColor);
 
         display->setCursor(65, 20);
         display->print("temp: ");
@@ -117,8 +119,10 @@ void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
         display->print((*appStatus->weatherObj)["weather"][0]["main"]);
         
     } else if (*appStatus->newWeatherData){
+      display->fillRect(0, 0, 128, 95, DEFAULT_BACKGROUND);
       display->setCursor(20, 20);
       display->print("loading...");
+      delay(200);
     }
   } else {
     display->setCursor(15, 20);

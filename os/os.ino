@@ -34,7 +34,7 @@ bool deviceConnected = false;
 bool oldDeviceConnected = false;
 bool weatherDataReceived;
 bool weatherLoaded = false;
-bool newWeatherData;
+bool newWeatherData = false;
 
 JSONVar weatherObj;
 
