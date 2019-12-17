@@ -21,8 +21,6 @@
 #define TIME_CENTER 31
 #define SWATCH_CENTER 16
 
-#define staticTime "12:45"
-
 #define TFT_SCLK 18
 #define TFT_MOSI 23
 #define TFT_CS    5

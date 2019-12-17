@@ -79,25 +79,37 @@ void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
         *appStatus->newWeatherData = false;
 
         switch((int)(*appStatus->weatherObj)["weather"][0]["id"] / 100) {
-//          case 2:
-////              appStatus->icon = thunderstorm_bits;
-//              break;
-//          case 3: 
-////              appStatus->icon = drizzle_bits;
-//          case 5:
-//              appStatus->icon = rain_bits;
-//              break;
-//          case 6:
-////              appStatus->icon = snow_bits; 
-//              break;
-//          case 7:
-////              appStatus->icon = snow_bits; 
-//              break;
-          case 8:
+          case THUNDERSTORM: 
+              appStatus->weatherIcon = thunder_bits;
+              appStatus->iconColor = ORANGE;
+              break;
+          case DRIZZLE: 
+              appStatus->weatherIcon = drizzle_bits;
+              appStatus->iconColor= RED;
+          case RAIN:
               appStatus->weatherIcon = rain_bits;
-              appStatus->iconColor = BLUE; 
+              appStatus->iconColor = CYAN;
+              break;
+          case SNOW:
+              appStatus->weatherIcon = snow_bits;
+              appStatus->iconColor = WHITE;
+              break;
+          case ATMOSPHERE:
+              appStatus->weatherIcon = cloud_bits;
+              appStatus->iconColor = WHITE; 
+              break;
+          case CLOUDS:
+              // clear case
+              if ((int)(*appStatus->weatherObj)["weather"][0]["id"] == 800) {
+                  appStatus->weatherIcon = sun_bits;
+                  appStatus->iconColor = YELLOW;
+              } else {
+                  appStatus->weatherIcon = cloud_bits;
+                  appStatus->iconColor = WHITE;   
+              }
               break;
           default:
+              perror("undefined weather type");
               break; 
         }
 
