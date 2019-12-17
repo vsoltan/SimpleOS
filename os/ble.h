@@ -14,6 +14,8 @@
 
 extern bool deviceConnected;
 extern JSONVar weatherObj;
+extern bool weatherDataReceived;
+extern bool newWeatherData;
 
 class MyServerCallbacks: public BLEServerCallbacks {
     void onConnect(BLEServer* pServer) {
@@ -29,6 +31,9 @@ class MyServerCallbacks: public BLEServerCallbacks {
 
 class MyCallbacks: public BLECharacteristicCallbacks {
     void onWrite(BLECharacteristic *pCharacteristic) {
+      Serial.println("HELLO");
+      newWeatherData = true;
+      weatherDataReceived = false;
       std::string rxValue = pCharacteristic->getValue();
 
       if (rxValue.length() > 0) {
@@ -47,14 +52,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
           Serial.println("Parsing input failed!");
           return;
         }
-        Serial.print("weather: ");
-        Serial.println(weatherObj["weather"][0]["main"]);
-        Serial.print("temp: ");
-        Serial.println(weatherObj["main"]["temp"]);
-        Serial.print("temp-max: ");
-        Serial.println(weatherObj["main"]["temp_max"]);
-        Serial.print("temp-min: ");
-        Serial.println(weatherObj["main"]["temp_min"]);
+        weatherDataReceived = true;
       }
     }
 };

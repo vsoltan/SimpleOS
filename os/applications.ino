@@ -14,7 +14,7 @@ void Window::setApplications(Icon **newApps) {
     this->applications = newApps;
 }
 
-AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj) {
+AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj, bool *weatherDataReceived, bool *newWeatherData) {
     AppStatus *appInfo = NULL;
     appInfo = (AppStatus *) malloc(sizeof(AppStatus));
 
@@ -30,6 +30,8 @@ AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj) {
     appInfo->stopWatchPauseTime = 0;
     appInfo->stopWatchRunning = false;
     appInfo->weatherObj = weatherObj;
+    appInfo->weatherDataReceived = weatherDataReceived;
+    appInfo->newWeatherData = newWeatherData;
 
     return appInfo;
 }
@@ -75,30 +77,37 @@ void updateScreenTime(ColorDisplay *display, RTCData *rtcda, RTC_Millis *rtc) {
 }
 
 // TODO implement stopwatch app
-void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display) {
-    Serial.println(flag);
+void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display, Window *window) {
     switch(flag) {
         case STOP_START:
-            Serial.println("why are you doing this");
             if (appStatus->stopWatchRunning) {
-                Serial.println("why are you doing this");
                 appStatus->stopWatchRunning = false;
                 appStatus->stopWatchStartTime = millis();
+                window->getApplications()[flag]->setIcon(play_bits);
+                window->getApplications()[flag]->setColor(BLUE);
             } else {
-                Serial.println("why are you doing this 2");
                 appStatus->stopWatchRunning = true;
                 appStatus->stopWatchStartTime = millis() - appStatus->stopWatchCurrTime;
+                window->getApplications()[flag]->setIcon(stop_bits);
+                window->getApplications()[flag]->setColor(RED);
             }
-            Serial.println("end");
+            display->fillRect(26, 60, 24, 24, DEFAULT_BACKGROUND);
+            drawPageIcons(window->getApplications(), display, 3);
             break;
         case CLEAR:
+            if (appStatus->stopWatchRunning) {
+                window->getApplications()[0]->setIcon(play_bits);
+                window->getApplications()[0]->setColor(BLUE);
+                display->fillRect(26, 60, 24, 24, DEFAULT_BACKGROUND);
+                drawPageIcons(window->getApplications(), display, 3); 
+            }
             appStatus->stopWatchCurrTime = 0;
             appStatus->stopWatchRunning = false;
             display->setTextSize(2);
             display->setCursor(SWATCH_CENTER, 20);
             display->setTextColor(WHITE, DEFAULT_BACKGROUND);
             display->print("00:00:00");
-            break;
+            break;  
         default:
             break;
     }
@@ -160,11 +169,9 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
 }
 
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
-    Serial.println("updating...");
     switch(info->currPage) {
         case SWATCH_D:
-            Serial.println("there");
-            updateStopwatch(info->currIcon, appStatus, display);
+            updateStopwatch(info->currIcon, appStatus, display, window);
             break;
 
          case MUSIC_D:

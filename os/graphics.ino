@@ -49,6 +49,10 @@ void Icon::setIcon(const unsigned char *newIcon) {
     this->icon = newIcon;
 }
 
+void Icon::setColor(uint16_t color) {
+    this->color = color;
+}
+
 uint8_t Icon::getDestinationDescriptor() {
     return this->destinationDescriptor;
 }
@@ -66,24 +70,64 @@ void drawHomeScreen(ColorDisplay *display, AppStatus *appStatus) {
 }
 
 void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
-    if (appStatus->weatherObj != NULL) {
-        display->setFont();
-        
-        display->setCursor(20, 20);
-        display->print((*appStatus->weatherObj)["weather"][0]["main"]);
+    display->setFont();
+    display->setTextColor(WHITE, DEFAULT_BACKGROUND);
+    if (*appStatus->bluetoothConnection) {
+      if (*appStatus->weatherDataReceived) {
+        display->fillRect(0, 0, 128, 95, DEFAULT_BACKGROUND);
+        *appStatus->newWeatherData = false;
 
-        display->setCursor(20, 30);
+        switch((int)(*appStatus->weatherObj)["weather"][0]["id"] / 100) {
+//          case 2:
+////              appStatus->icon = thunderstorm_bits;
+//              break;
+//          case 3: 
+////              appStatus->icon = drizzle_bits;
+//          case 5:
+//              appStatus->icon = rain_bits;
+//              break;
+//          case 6:
+////              appStatus->icon = snow_bits; 
+//              break;
+//          case 7:
+////              appStatus->icon = snow_bits; 
+//              break;
+          case 8:
+              appStatus->weatherIcon = sunny_bits; 
+              break;
+          default:
+              break; 
+        }
+
+        display->drawXBitmap(0, 0, appStatus->weatherIcon, 60, 60, YELLOW);
+
+        display->setCursor(65, 20);
         display->print("temp: ");
-        display->print(weatherObj["main"]["temp"]);
+        display->print((int)(*appStatus->weatherObj)["main"]["temp"]);
 
-        display->setCursor(20, 40);
-        display->print("temp-max: ");
-        display->print(weatherObj["main"]["temp_max"]);
+        display->setCursor(65, 30);
+        display->print("max:  ");
+        display->print((int)(*appStatus->weatherObj)["main"]["temp_max"]);
 
-        display->setCursor(20, 50);
-        display->print("temp-min: ");
-        display->println(weatherObj["main"]["temp_min"]);
+        display->setCursor(65, 40);
+        display->print("min:  ");
+        display->println((int)(*appStatus->weatherObj)["main"]["temp_min"]);
+
+        display->setCursor(40, 80);
+        display->print((*appStatus->weatherObj)["weather"][0]["main"]);
+        
+    } else if (*appStatus->newWeatherData){
+      display->setCursor(20, 20);
+      display->print("loading...");
     }
+  } else {
+    display->setCursor(15, 20);
+    display->print("Please connect");
+    display->setCursor(15, 30);
+    display->print("to a bluetooth");
+    display->setCursor(15, 40);
+    display->print("device");
+  }
 }
 
 void displayFormatedStopwatch(ColorDisplay *display, unsigned long t) {
