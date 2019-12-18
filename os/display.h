@@ -35,13 +35,14 @@
 #define MUSIC_D   2
 #define WEATHER_D 3
 
-#define RED    ST7735_RED
-#define BLUE   ST7735_BLUE
-#define GREEN  ST7735_GREEN
-#define WHITE  ST7735_WHITE
-#define CYAN   ST7735_CYAN
-#define YELLOW ST7735_YELLOW
-#define ORANGE 0xFBEC
+#define RED     ST7735_RED
+#define BLUE    ST7735_BLUE
+#define GREEN   ST7735_GREEN
+#define WHITE   ST7735_WHITE
+#define CYAN    ST7735_CYAN
+#define YELLOW  ST7735_YELLOW
+#define MAGNETA ST7735_MAGENTA
+#define ORANGE  0xFCCC
 
 
 typedef struct {
