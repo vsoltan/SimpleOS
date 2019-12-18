@@ -44,6 +44,8 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
 
 void updateMusic(uint8_t flag, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus, ColorDisplay *display);
 
+void updateVolume(RotaryEncoder *encoder, int *oldPos, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus);
+
 void runStopWatch(ColorDisplay *display, AppStatus *appStatus);
 
 void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display, Window *window);

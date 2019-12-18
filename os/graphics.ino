@@ -74,38 +74,56 @@ void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
     display->setTextColor(WHITE, DEFAULT_BACKGROUND);
     
     if (*appStatus->bluetoothConnection) {
+      
       if (*appStatus->weatherDataReceived) {
         display->fillRect(0, 0, 128, 95, DEFAULT_BACKGROUND);
         *appStatus->newWeatherData = false;
+
+        char *description;
+        uint8_t pos;
 
         switch((int)(*appStatus->weatherObj)["weather"][0]["id"] / 100) {
           case THUNDERSTORM: 
               appStatus->weatherIcon = thunder_bits;
               appStatus->iconColor = ORANGE;
+              description = "Thunder";
+              pos = 16;
               break;
           case DRIZZLE: 
               appStatus->weatherIcon = drizzle_bits;
               appStatus->iconColor= RED;
+              description = "Drizzle";
+              pos = 16;
           case RAIN:
               appStatus->weatherIcon = rain_bits;
               appStatus->iconColor = CYAN;
+              description = "Raining";
+              pos = 15;
               break;
           case SNOW:
               appStatus->weatherIcon = snow_bits;
               appStatus->iconColor = WHITE;
+              description = "Snowing";
+              pos = 16;
               break;
           case ATMOSPHERE:
               appStatus->weatherIcon = cloud_bits;
               appStatus->iconColor = WHITE; 
+              description = "Foggy";
+              pos = 30;
               break;
           case CLOUDS:
               // clear case
               if ((int)(*appStatus->weatherObj)["weather"][0]["id"] == 800) {
                   appStatus->weatherIcon = sun_bits;
                   appStatus->iconColor = YELLOW;
+                  description = "Sunny";
+                  pos = 31;
               } else {
                   appStatus->weatherIcon = cloud_bits;
                   appStatus->iconColor = WHITE;   
+                  description = "Cloudy";
+                  pos = 23;
               }
               break;
           default:
@@ -127,8 +145,9 @@ void drawWeatherScreen(ColorDisplay *display, AppStatus *appStatus) {
         display->print("min:  ");
         display->println((int)(*appStatus->weatherObj)["main"]["temp_min"]);
 
-        display->setCursor(40, 80);
-        display->print((*appStatus->weatherObj)["weather"][0]["main"]);
+        display->setFont(DEFAULT_FONT);
+        display->setCursor(pos, 80);
+        display->print(description);
         
     } else if (*appStatus->newWeatherData){
       display->fillRect(0, 0, 128, 95, DEFAULT_BACKGROUND);

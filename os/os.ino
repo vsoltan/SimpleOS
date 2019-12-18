@@ -15,6 +15,7 @@ DisplayInfo *tftInfo;
 
 RotaryEncoder encoder(EDA, ECLK);
 int pos = 0;
+int oldPos = 0;
 
 // RTC
 
@@ -44,11 +45,11 @@ Window *window;
 
 Icon *homeIcons[3] = { new Icon(14, 60, 24, 24, weather_bits, "Weather", WEATHER_D, CYAN), new Icon(52, 60, 24, 24, swatch_bits, "Stopwatch", SWATCH_D, ORANGE), new Icon(90, 60, 24, 24, music_bits, "Music", MUSIC_D, YELLOW) };
 Icon *stopWatch[3] = { new Icon(26, 60, 24, 24, play_bits, "Start/Stop", SWATCH_D, BLUE), new Icon(76, 60, 24, 24, reset_bits, "Clear", SWATCH_D, ORANGE), new Icon(56, 95, 16, 16, back_bits, "Back", HOME_D, RED) };
-Icon *musicControl[4] = { new Icon(20, 60, 16, 16, prev_track_bits, "Previous", MUSIC_D, GREEN), new Icon(55, 55, 24, 24, play_bits, "Stop/Play", MUSIC_D, GREEN), new Icon(90, 60, 16, 16, next_track_bits, "FastForward", MUSIC_D, GREEN), new Icon(55, 95, 16, 16, back_bits, "Stop/Play", HOME_D, RED) };
+Icon *musicControl[5] = { new Icon(20, 60, 16, 16, prev_track_bits, "Previous", MUSIC_D, GREEN), new Icon(55, 55, 24, 24, play_bits, "Stop/Play", MUSIC_D, GREEN), new Icon(90, 60, 16, 16, next_track_bits, "FastForward", MUSIC_D, GREEN), new Icon(32, 95, 16, 16, back_bits, "Stop/Play", HOME_D, RED), new Icon(80, 95, 16, 16, back_bits, "Volume", MUSIC_D, ORANGE) };
 Icon *weatherIcons[1] = { new Icon(56, 95, 16, 16, back_bits, "Back", HOME_D, RED)};
 
 Icon **allApps[4] = {homeIcons, stopWatch, musicControl, weatherIcons};
-uint8_t numApps[4] = {3, 3, 4, 1};
+uint8_t numApps[4] = {3, 3, 5, 1};
 
 AppStatus *appStatus;
 
@@ -79,7 +80,11 @@ void loop() {
 
     encoder.tick();
 
-    navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
+    if (appStatus->inVolumeControls) {
+        updateVolume(&encoder, &oldPos, pTxCharacteristic, appStatus);
+    } else {
+        navigate(&encoder, window->getApplications(), &pos, numApps[tftInfo->currPage]);
+    }
 
     tftInfo->currIcon = bidirMod(pos, numApps[tftInfo->currPage]);
 
@@ -152,7 +157,9 @@ void loop() {
 
     // BLE on connection
     if (deviceConnected && !oldDeviceConnected) {
-        showBluetoothConnected(&tft);
+        if (tftInfo->currPage != WEATHER_D) {
+          showBluetoothConnected(&tft);  
+        }
         oldDeviceConnected = deviceConnected;
     }
 }

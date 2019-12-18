@@ -6,6 +6,10 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
   // Create the BLE Device
   BLEDevice::init("Valeriy's DumbWatch");
 
+  BLEDevice::setMTU(512);
+
+  Serial.println(BLEDevice::getMTU());
+
   // Create the BLE Server
   *pServer = BLEDevice::createServer();
 

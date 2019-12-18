@@ -23,12 +23,17 @@ AppStatus *initAppStatus(bool *deviceConnected, JSONVar *weatherObj, bool *weath
     }
 
     appInfo->stopwatchRunning = 0;
+    
     appInfo->musicPlaying = false;
+    appInfo->inVolumeControls = false;
+    
     appInfo->bluetoothConnection = deviceConnected;
+    
     appInfo->stopWatchStartTime = 0;
     appInfo->stopWatchCurrTime = 0;
     appInfo->stopWatchPauseTime = 0;
     appInfo->stopWatchRunning = false;
+    
     appInfo->weatherObj = weatherObj;
     appInfo->weatherDataReceived = weatherDataReceived;
     appInfo->newWeatherData = newWeatherData;
@@ -116,7 +121,7 @@ void updateStopwatch(uint8_t flag, AppStatus *appStatus, ColorDisplay *display, 
 void updateMusic(uint8_t flag, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus, ColorDisplay *display) {
 
     if (*appStatus->bluetoothConnection) {
-        // play or pause pressed
+        
         if (flag == 1) {
           if (appStatus->musicPlaying) {
             window->getApplications()[flag]->setIcon(play_bits);
@@ -125,6 +130,7 @@ void updateMusic(uint8_t flag, Window *window, BLECharacteristic *pTxCharacteris
           }
           appStatus->musicPlaying = !(appStatus->musicPlaying);
         }
+        
         pTxCharacteristic->setValue(&flag, 1);
         pTxCharacteristic->notify();
 
@@ -168,6 +174,27 @@ void drawScreen(ColorDisplay *display, DisplayInfo *info, Window *window, RTCDat
      }
 }
 
+void updateVolume(RotaryEncoder *encoder, int *oldPos, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
+    
+      uint8_t cmd = 0;
+      int newPos = encoder->getPosition();
+
+      if (newPos > *oldPos && bidirMod(newPos, 4) == 0) {
+            cmd = 3;
+            pTxCharacteristic->setValue(&cmd, 1);
+            pTxCharacteristic->notify();  
+            Serial.println(cmd);
+        } else if (newPos < *oldPos && bidirMod(newPos, 4) == 0) {
+            cmd = 4;
+            pTxCharacteristic->setValue(&cmd, 1);
+            pTxCharacteristic->notify();  
+            Serial.println(cmd);
+        }
+
+        *oldPos = newPos;
+        
+}
+
 void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *window, BLECharacteristic *pTxCharacteristic, AppStatus *appStatus) {
     switch(info->currPage) {
         case SWATCH_D:
@@ -175,7 +202,11 @@ void updateScreenOnClick(ColorDisplay *display, DisplayInfo *info, Window *windo
             break;
 
          case MUSIC_D:
-            updateMusic(info->currIcon, window, pTxCharacteristic, appStatus, display);
+            if (info->currIcon <= 3) {
+              updateMusic(info->currIcon, window, pTxCharacteristic, appStatus, display);
+            } else {
+              appStatus->inVolumeControls = !appStatus->inVolumeControls;
+            }
             break;
 
         default:
