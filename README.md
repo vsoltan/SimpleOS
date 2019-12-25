@@ -1,5 +1,4 @@
-# DumbOS
-software that powers the Dumb-Smart® Watch
+# SimpleOS
 
 install the following libraries: 
 
