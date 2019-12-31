@@ -2,12 +2,13 @@
 #include "ble.h"
 
 void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
- 
+
   // Create the BLE Device
   BLEDevice::init("Valeriy's DumbWatch");
 
-  BLEDevice::setMTU(512);
 
+  // TODO figure out it this is necessary
+  BLEDevice::setMTU(512);
   Serial.println(BLEDevice::getMTU());
 
   // Create the BLE Server
@@ -16,7 +17,7 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
   if (*pServer == NULL) {
     perror("failed to correctly initialize server");
   }
-  
+
   (*pServer)->setCallbacks(new MyServerCallbacks());
 
   // Create the BLE Service
@@ -27,12 +28,12 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
                     CHARACTERISTIC_UUID_TX,
                     BLECharacteristic::PROPERTY_NOTIFY
                   );
-                  
+
   if (*pTxCharacteristic == NULL) {
     perror("failed to correctly initialize transmit characteristic");
   }
-  
-                      
+
+
   (*pTxCharacteristic)->addDescriptor(new BLE2902());
 
   BLECharacteristic * pRxCharacteristic = pService->createCharacteristic(

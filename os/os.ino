@@ -25,12 +25,15 @@ RTCData *rtcda;
 // BUTTONS
 
 Button NAV(HIGH);
-unsigned long lastPress = 0;
+unsigned long lastButtonPress = 0;
 
 // BLE and COMMS
 
 BLEServer *pServer = NULL;
 BLECharacteristic *pTxCharacteristic;
+
+// TODO make this all a struct
+
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 bool weatherDataReceived;
@@ -102,7 +105,7 @@ void loop() {
     if (navPress) {
         switch (navPress) {
             case PRESSED:
-                if (millis() > lastPress + DEBOUNCE) {
+                if (millis() > lastButtonPress + DEBOUNCE) {
                     if (!tftInfo->displayOn) {
                         togglePower(tftInfo);
                     } else {
@@ -115,7 +118,7 @@ void loop() {
                             updateScreenOnClick(&tft, tftInfo, window, pTxCharacteristic, appStatus);
                         }
                     }
-                    lastPress = millis();
+                    lastButtonPress = millis();
                 }
                 break;
 
@@ -126,7 +129,7 @@ void loop() {
                 break;
 
             case RELEASED:
-                lastPress = millis();
+                lastButtonPress = millis();
                 break;
 
             default:
@@ -158,7 +161,7 @@ void loop() {
     // BLE on connection
     if (deviceConnected && !oldDeviceConnected) {
         if (tftInfo->currPage != WEATHER_D) {
-          showBluetoothConnected(&tft);  
+          showBluetoothConnected(&tft);
         }
         oldDeviceConnected = deviceConnected;
     }
