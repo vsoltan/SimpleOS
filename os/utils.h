@@ -7,6 +7,8 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+#define BAUD 115200
+
 // ENCODER PINS
 
 #define ECLK 13 // A

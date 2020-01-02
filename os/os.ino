@@ -1,10 +1,7 @@
 
 #include "graphics.h"
-#include "button.h"
 #include "ble.h"
 #include "applications.h"
-
-#define BAUD 115200
 
 // DISPLAY
 

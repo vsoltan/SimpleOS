@@ -8,8 +8,8 @@ void initBLE(BLEServer **pServer, BLECharacteristic **pTxCharacteristic) {
 
 
   // TODO figure out it this is necessary
-  BLEDevice::setMTU(512);
-  Serial.println(BLEDevice::getMTU());
+//  BLEDevice::setMTU(512);
+//  Serial.println(BLEDevice::getMTU());
 
   // Create the BLE Server
   *pServer = BLEDevice::createServer();
