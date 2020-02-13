@@ -11,3 +11,5 @@ install the following libraries in the arduino library manager:
 
 Download the companion application for all bluetooth low energy functionality: 
 https://github.com/DenizGuler/dumbSmartWatch
+
+Product Site: https://sites.google.com/view/vsoltan-simple-watch/home
